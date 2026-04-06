@@ -2,38 +2,32 @@
 
 Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
 
-**GitHub account:** [NickCroninZoomph](https://github.com/NickCroninZoomph)
+**Repository:** [github.com/NickCroninZoomph/dashboard-examples](https://github.com/NickCroninZoomph/dashboard-examples)
 
 ## GitHub Pages
 
-1. Create a **new repository** under your account (e.g. `powerpoint-generator` or `dashboards`).
-
-2. In this folder on your machine (this repo is already initialized with `main`):
+1. In this folder, connect and push (if you haven’t already):
 
    ```bash
    cd "/Users/nickcronin/Desktop/Powerpoint Generator"
-   git remote add origin https://github.com/NickCroninZoomph/YOUR_REPO_NAME.git
+   git remote add origin https://github.com/NickCroninZoomph/dashboard-examples.git
    git push -u origin main
    ```
 
-   Replace `YOUR_REPO_NAME` with the repo you created. If `git remote add` fails because `origin` exists, use `git remote set-url origin https://github.com/NickCroninZoomph/YOUR_REPO_NAME.git` instead.
+   If `origin` already exists:
 
-3. On GitHub: **Settings → Pages** (under “Code and automation”).
+   ```bash
+   git remote set-url origin https://github.com/NickCroninZoomph/dashboard-examples.git
+   git push -u origin main
+   ```
 
-4. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+2. On GitHub: **Settings → Pages** → **Deploy from a branch** → branch **main**, folder **/ (root)** → Save.
 
-5. Branch: **main**, folder: **/ (root)** → Save.
+3. Live site (after the build finishes):
 
-6. After a minute, the site is at:
-
-   `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/`
-
-   (GitHub lowercases the username in Pages URLs.)
-
-   Direct links:
-
-   - `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/nba-prime-dashboard/`
-   - `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/invisalign-nfl-dashboard/`
+   - **Home:** [nickcroninzoomph.github.io/dashboard-examples/](https://nickcroninzoomph.github.io/dashboard-examples/)
+   - **NBA:** […/nba-prime-dashboard/](https://nickcroninzoomph.github.io/dashboard-examples/nba-prime-dashboard/)
+   - **Invisalign NFL:** […/invisalign-nfl-dashboard/](https://nickcroninzoomph.github.io/dashboard-examples/invisalign-nfl-dashboard/)
 
 ## Updating data
 
