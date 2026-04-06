@@ -1,38 +1,36 @@
-# Deploy static site to GitHub Pages (use this if "Deploy from branch" shows 404)
-name: Deploy GitHub Pages
+# Publishes only the static site files to branch `gh-pages`.
+# In repo Settings → Pages, set Source to "Deploy from branch" → branch gh-pages → folder / (root)
+name: Publish site to gh-pages
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: publish-gh-pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v4
+      - name: Build site folder
+        run: |
+          mkdir -p site
+          cp index.html site/
+          [ -f .nojekyll ] && cp .nojekyll site/
+          cp -r nba-prime-dashboard invisalign-nfl-dashboard site/
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Push to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: .
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
