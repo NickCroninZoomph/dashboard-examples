@@ -4,37 +4,41 @@ Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
 
 **Repository:** [github.com/NickCroninZoomph/dashboard-examples](https://github.com/NickCroninZoomph/dashboard-examples)
 
-## GitHub Pages
+**Site files live in `docs/`** so GitHub Pages can use **main** + **/docs** (the most reliable setup).
 
-1. In this folder, connect and push (if you haven’t already):
+## GitHub Pages — do these in order
+
+1. Push the latest `main`:
 
    ```bash
    cd "/Users/nickcronin/Desktop/Powerpoint Generator"
-   git remote add origin https://github.com/NickCroninZoomph/dashboard-examples.git
-   git push -u origin main
+   git push origin main
    ```
 
-   If `origin` already exists:
+2. Open **Settings → Pages** for the repo:  
+   `https://github.com/NickCroninZoomph/dashboard-examples/settings/pages`
 
-   ```bash
-   git remote set-url origin https://github.com/NickCroninZoomph/dashboard-examples.git
-   git push -u origin main
-   ```
+3. Under **Build and deployment**:
+   - **Source:** **Deploy from a branch**
+   - **Branch:** **`main`** (not `gh-pages`)
+   - **Folder:** **`/docs`**
+   - Click **Save**
 
-2. **Publish & turn on Pages**
+4. Wait until the banner says something like **“Your site is live at …”** (can take 2–5 minutes the first time).
 
-   - Push `main` (the workflow `.github/workflows/pages.yml` copies the dashboards into a `site/` folder and pushes that to branch **`gh-pages`**).
-   - **Actions** tab → wait until **Publish site to gh-pages** is green.
-   - **Settings → Pages** → **Build and deployment** → **Source:** **Deploy from a branch** → Branch **`gh-pages`**, folder **`/ (root)`** → Save.
+5. Open:
 
-   (Using branch **`gh-pages`** avoids the newer “deploy-pages” setup that often stays on 404.)
+   - **Home:** https://nickcroninzoomph.github.io/dashboard-examples/
+   - **NBA:** https://nickcroninzoomph.github.io/dashboard-examples/nba-prime-dashboard/
+   - **Invisalign:** https://nickcroninzoomph.github.io/dashboard-examples/invisalign-nfl-dashboard/
 
-3. Live site (give it 1–2 minutes after the workflow succeeds):
-
-   - **Home:** [nickcroninzoomph.github.io/dashboard-examples/](https://nickcroninzoomph.github.io/dashboard-examples/)
-   - **NBA:** […/nba-prime-dashboard/](https://nickcroninzoomph.github.io/dashboard-examples/nba-prime-dashboard/)
-   - **Invisalign NFL:** […/invisalign-nfl-dashboard/](https://nickcroninzoomph.github.io/dashboard-examples/invisalign-nfl-dashboard/)
+If you still see 404, the Pages source is almost always still wrong — double-check it says **`main`** and **`/docs`**, not **`/ (root)`** on `main`.
 
 ## Updating data
 
-Edit the `window.NBA_DASHBOARD_DATA` or `window.INV` JSON inside each `index.html`, commit, and push.
+Edit the JSON inside:
+
+- `docs/nba-prime-dashboard/index.html` (`window.NBA_DASHBOARD_DATA`)
+- `docs/invisalign-nfl-dashboard/index.html` (`window.INV`)
+
+Then commit and push `main`.
