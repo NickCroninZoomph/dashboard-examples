@@ -21,9 +21,14 @@ Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
    git push -u origin main
    ```
 
-2. On GitHub: **Settings → Pages** → **Deploy from a branch** → branch **main**, folder **/ (root)** → Save.
+2. **Turn on GitHub Pages** — **Settings → Pages** → under **Build and deployment**:
 
-3. Live site (after the build finishes):
+   - **Recommended:** set **Source** to **GitHub Actions** (this repo includes `.github/workflows/pages.yml`). After you push, open the **Actions** tab and wait for **Deploy GitHub Pages** to finish (green).
+   - If you prefer **Deploy from a branch** instead: branch **main**, folder **/ (root)** → Save.
+
+   If the site still shows **404**, use **GitHub Actions** only (not both).
+
+3. Live site (after the workflow succeeds or the branch deploy finishes):
 
    - **Home:** [nickcroninzoomph.github.io/dashboard-examples/](https://nickcroninzoomph.github.io/dashboard-examples/)
    - **NBA:** […/nba-prime-dashboard/](https://nickcroninzoomph.github.io/dashboard-examples/nba-prime-dashboard/)
