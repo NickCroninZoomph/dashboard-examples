@@ -2,23 +2,21 @@
 
 Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
 
+**GitHub account:** [NickCroninZoomph](https://github.com/NickCroninZoomph)
+
 ## GitHub Pages
 
-1. Create a **new repository** on GitHub (e.g. `dashboards` or `powerpoint-generator`).
+1. Create a **new repository** under your account (e.g. `powerpoint-generator` or `dashboards`).
 
-2. In this folder on your machine:
+2. In this folder on your machine (this repo is already initialized with `main`):
 
    ```bash
    cd "/Users/nickcronin/Desktop/Powerpoint Generator"
-   git init
-   git add index.html README.md .gitignore nba-prime-dashboard invisalign-nfl-dashboard
-   git commit -m "Add dashboards for GitHub Pages"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git remote add origin https://github.com/NickCroninZoomph/YOUR_REPO_NAME.git
    git push -u origin main
    ```
 
-   Replace `YOUR_USERNAME` and `YOUR_REPO` with your GitHub user and repo name.
+   Replace `YOUR_REPO_NAME` with the repo you created. If `git remote add` fails because `origin` exists, use `git remote set-url origin https://github.com/NickCroninZoomph/YOUR_REPO_NAME.git` instead.
 
 3. On GitHub: **Settings → Pages** (under “Code and automation”).
 
@@ -28,12 +26,14 @@ Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
 
 6. After a minute, the site is at:
 
-   `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+   `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/`
+
+   (GitHub lowercases the username in Pages URLs.)
 
    Direct links:
 
-   - `https://YOUR_USERNAME.github.io/YOUR_REPO/nba-prime-dashboard/`
-   - `https://YOUR_USERNAME.github.io/YOUR_REPO/invisalign-nfl-dashboard/`
+   - `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/nba-prime-dashboard/`
+   - `https://nickcroninzoomph.github.io/YOUR_REPO_NAME/invisalign-nfl-dashboard/`
 
 ## Updating data
 
