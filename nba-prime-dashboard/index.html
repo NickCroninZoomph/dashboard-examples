@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA on Prime — Social Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-page:       #090D18;
+  --bg-surface:    #0D1520;
+  --bg-elevated:   #141F2E;
+  --bg-border:     #1C2B3A;
+  --prime-teal:    #00A8E0;
+  --prime-teal-dim:#007DAA;
+  --prime-glow:    rgba(0,168,224,0.14);
+  --amazon-orange: #FF9900;
+  --nbc-purple:    #8E44AD;
+  --espn-red:      #C0392B;
+  --positive:      #1ABC9C;
+  --text-primary:  #EEF2F7;
+  --text-secondary:#7A92A8;
+  --text-muted:    #3D5166;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(135deg, #001933 0%, #050C16 55%, var(--bg-page) 100%);
+  border-bottom: 1px solid var(--bg-border);
+  padding: 22px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.prime-badge {
+  background: var(--prime-teal);
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+.header-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.header-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.date-filter label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+.date-filter input[type="date"] {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--bg-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color-scheme: dark;
+}
+.date-filter input[type="date"]:focus {
+  outline: none;
+  border-color: var(--prime-teal);
+  box-shadow: 0 0 0 2px var(--prime-glow);
+}
+.date-filter-sep {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.game-date-badge {
+  display: inline-block;
+  background: var(--bg-elevated);
+  border: 1px solid var(--bg-border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--prime-teal);
+  letter-spacing: 0.5px;
+}
+.last-updated {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────── */
+.dashboard {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 28px 48px;
+}
+.section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--prime-teal);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bg-border);
+}
+.section-gap { margin-bottom: 28px; }
+
+/* ── CARDS ───────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── KPI ROW ─────────────────────────────────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-top: 3px solid var(--prime-teal);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 32px var(--prime-glow);
+  transition: box-shadow 0.2s;
+}
+.kpi-card:hover {
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 0 48px var(--prime-glow);
+}
+.kpi-card.orange { border-top-color: var(--amazon-orange); box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 32px rgba(255,153,0,0.10); }
+.kpi-card.green  { border-top-color: var(--positive); box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 32px rgba(26,188,156,0.10); }
+.kpi-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.kpi-value.teal   { color: var(--prime-teal); }
+.kpi-value.orange { color: var(--amazon-orange); }
+.kpi-value.green  { color: var(--positive); }
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ── COMPETITIVE SCORECARD ───────────────────────────────────────────── */
+.comp-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.comp-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.comp-header {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comp-header.prime { background: linear-gradient(135deg, #001E33, #0D1520); border-bottom: 2px solid var(--prime-teal); }
+.comp-header.nbc   { background: linear-gradient(135deg, #1A0D2E, #0D1520); border-bottom: 2px solid var(--nbc-purple); }
+.comp-header.espn  { background: linear-gradient(135deg, #2E0D0D, #0D1520); border-bottom: 2px solid var(--espn-red); }
+.comp-name {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+.comp-name.prime { color: var(--prime-teal); }
+.comp-name.nbc   { color: #B07FD4; }
+.comp-name.espn  { color: #E55C5C; }
+.comp-posts-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  padding: 3px 9px;
+  border-radius: 12px;
+}
+.comp-metrics {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.comp-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--bg-border);
+}
+.comp-metric:last-child { border-bottom: none; padding-bottom: 0; }
+.comp-metric-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.comp-metric-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.comp-metric-value.highlight { color: var(--prime-teal); }
+
+/* ── CHART GRID ──────────────────────────────────────────────────────── */
+.charts-2col {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 16px;
+}
+.charts-2col-even {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.chart-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.chart-wrap {
+  position: relative;
+  height: 260px;
+}
+.chart-wrap.tall { height: 300px; }
+.chart-wrap.short { height: 220px; }
+
+/* ── PLATFORM PILLS ──────────────────────────────────────────────────── */
+.platform-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.platform-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--bg-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  flex: 1;
+  min-width: 140px;
+}
+.platform-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.platform-pill-info { flex: 1; }
+.platform-pill-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.platform-pill-eng {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+.platform-pill-er {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── TOP POSTS TABLE ─────────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 11px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--bg-border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--bg-border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(255,255,255,0.025); transition: background 0.12s; }
+.msg-cell {
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+.badge-ig    { background: rgba(225,48,108,0.18); color: #E1306C; }
+.badge-fb    { background: rgba(24,119,242,0.18); color: #4D8FF5; }
+.badge-tw    { background: rgba(29,161,242,0.18); color: #1DA1F2; }
+.badge-yt    { background: rgba(255,0,0,0.18);    color: #FF4444; }
+.badge-video    { background: rgba(0,168,224,0.14); color: var(--prime-teal); }
+.badge-carousel { background: rgba(255,153,0,0.14); color: var(--amazon-orange); }
+.badge-photo    { background: rgba(26,188,156,0.14); color: var(--positive); }
+.badge-text     { background: rgba(122,146,168,0.14); color: var(--text-secondary); }
+.num { font-variant-numeric: tabular-nums; font-weight: 700; }
+.er-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(0,168,224,0.12);
+  color: var(--prime-teal);
+}
+.er-chip.high { background: rgba(26,188,156,0.14); color: var(--positive); }
+
+/* ── API FUTURE BANNER ───────────────────────────────────────────────── */
+.api-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-elevated);
+  border: 1px dashed var(--bg-border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-top: 28px;
+}
+.api-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.api-text-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.api-text-sub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.api-code {
+  margin-left: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--prime-teal);
+  white-space: nowrap;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-row         { grid-template-columns: repeat(2, 1fr); }
+  .charts-2col     { grid-template-columns: 1fr; }
+  .charts-2col-even{ grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .kpi-row         { grid-template-columns: 1fr; }
+  .comp-row        { grid-template-columns: 1fr; }
+  .header          { flex-direction: column; align-items: flex-start; }
+  .header-right    { align-items: flex-start; width: 100%; }
+  .date-filter     { justify-content: flex-start; }
+  .dashboard       { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+  DATA BLOCK — replace with fetch('/api/nba-recap') for live data
+════════════════════════════════════════════════════════════════════ -->
+<script>
+// TODO: replace with fetch('/api/nba-recap') for live data
+window.NBA_DASHBOARD_DATA = {
+  "meta": {
+    "reportTitle": "NBA on Prime",
+    "gameDate": "February 26, 2026",
+    "reportYear": 2026,
+    "lastUpdated": "April 06, 2026 at 01:16 PM UTC",
+    "source": "nba on prime february 26 recap.xlsx"
+  },
+  "prime": {
+    "kpi": {
+      "totalEngagements": 5896662,
+      "totalImpressions": 207369771,
+      "videoViews": 32288196,
+      "avgEngagementRate": 3.75
+    },
+    "platforms": [
+      { "name": "Twitter",   "posts": 409, "engagements": 185522,  "impressions": 18839935,  "er": 0.98 },
+      { "name": "Instagram", "posts": 566, "engagements": 3329490, "impressions": 42842687,  "er": 7.77 },
+      { "name": "Facebook",  "posts": 486, "engagements": 2356796, "impressions": 144265351, "er": 1.63 },
+      { "name": "YouTube",   "posts": 62,  "engagements": 24854,   "impressions": 1421798,   "er": 1.75 }
+    ],
+    "engagementBreakdown": {
+      "likes": 5219388,
+      "comments": 125704,
+      "sharesRetweets": 86905,
+      "fbReactions": 449981
+    },
+    "contentMix": [
+      { "label": "Video",    "count": 1079, "pct": 70.85 },
+      { "label": "Photo",    "count": 224,  "pct": 14.71 },
+      { "label": "Carousel", "count": 208,  "pct": 13.66 },
+      { "label": "Text",     "count": 12,   "pct": 0.79  }
+    ]
+  },
+  "competitive": {
+    "totals": [
+      { "name": "Prime Video", "posts": 1523, "engagements": 5896662,  "impressions": 207369771, "er": 3.75 },
+      { "name": "NBC",         "posts": 1254, "engagements": 2632665,  "impressions": 95249347,  "er": 2.62 },
+      { "name": "ESPN",        "posts": 1925, "engagements": 33497095, "impressions": 779738353, "er": 2.83 }
+    ],
+    "byPlatform": {
+      "labels": ["Twitter", "Instagram", "Facebook", "YouTube"],
+      "prime": [185522,  3329490,  2356796, 24854 ],
+      "nbc":   [179984,  1921556,   464096, 67029 ],
+      "espn":  [1340066, 27547180, 3829668, 780181]
+    }
+  },
+  "weekOverWeek": {
+    "periods":     ["Feb 12", "Feb 19", "Feb 26"],
+    "posts":       [1759,      1674,      1523      ],
+    "engagements": [5247867,   5132507,   5896662   ],
+    "impressions": [175762300, 135456154, 207369771 ]
+  },
+  "topPosts": [
+    { "platform": "Facebook",  "contentType": "Video",    "message": "The former President and First Lady receiving a loud ovation in Los Angeles", "engagements": 312517, "videoViews": 2797042, "er": 1.96 },
+    { "platform": "Instagram", "contentType": "Carousel", "message": "Coop channeling his inner Dirk — Cooper Flagg + Dirk Nowitzki | Tonight on primevideo", "engagements": 306466, "videoViews": null, "er": 11.86 },
+    { "platform": "Instagram", "contentType": "Carousel", "message": "First look at Kristaps Porzingis on the court for the Warriors", "engagements": 139559, "videoViews": null, "er": 11.78 },
+    { "platform": "Instagram", "contentType": "Video",    "message": "Nikola Jokic is one of a kind (via nuggets)", "engagements": 122911, "videoViews": null, "er": 6.24 },
+    { "platform": "Instagram", "contentType": "Carousel", "message": "Kevin Durant channelling swish41 with a pregame to-go plate", "engagements": 100224, "videoViews": null, "er": 11.56 },
+    { "platform": "Instagram", "contentType": "Carousel", "message": "Tonight on #NBAonPrime", "engagements": 99638, "videoViews": null, "er": 11.50 },
+    { "platform": "Instagram", "contentType": "Video",    "message": "LeBron and the Lakers hit this pregame celly so smooth", "engagements": 98977, "videoViews": null, "er": 6.32 },
+    { "platform": "Facebook",  "contentType": "Video",    "message": "LeBron and the Lakers hit this pregame celly so smooth", "engagements": 94249, "videoViews": 1272746, "er": 1.30 },
+    { "platform": "Instagram", "contentType": "Video",    "message": "Kristaps Porzingis immediately contributed in his Warriors debut", "engagements": 91675, "videoViews": null, "er": 6.29 },
+    { "platform": "Instagram", "contentType": "Carousel", "message": "cortis courtside for Lakers/Mavs! #nbaonprime", "engagements": 79944, "videoViews": null, "er": 11.23 }
+  ]
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+  HEADER
+════════════════════════════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="prime-badge">Prime Video</div>
+    <div>
+      <h1 id="hdr-title">NBA on Prime</h1>
+      <div class="header-sub">Social Media Performance Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date-filter" role="group" aria-label="Filter by date range">
+      <label for="filter-start">From</label>
+      <input type="date" id="filter-start" />
+      <span class="date-filter-sep" aria-hidden="true">–</span>
+      <label for="filter-end">To</label>
+      <input type="date" id="filter-end" />
+    </div>
+    <div class="game-date-badge" id="hdr-date"></div>
+    <div class="last-updated" id="hdr-updated"></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+  MAIN DASHBOARD
+════════════════════════════════════════════════════════════════════ -->
+<main class="dashboard">
+
+  <!-- KPI Row -->
+  <div class="section-gap">
+    <div class="section-label">Prime Video at a Glance</div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Engagements</div>
+        <div class="kpi-value teal" id="kpi-eng"></div>
+        <div class="kpi-sub">Likes, comments, shares &amp; reactions</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">Total Impressions</div>
+        <div class="kpi-value orange" id="kpi-imp"></div>
+        <div class="kpi-sub">Across all platforms</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Video Views</div>
+        <div class="kpi-value" id="kpi-vid"></div>
+        <div class="kpi-sub">Facebook &amp; YouTube combined</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Avg Engagement Rate</div>
+        <div class="kpi-value green" id="kpi-er"></div>
+        <div class="kpi-sub">Post-weighted across platforms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Competitive Scorecard -->
+  <div class="section-gap">
+    <div class="section-label">Competitive Scorecard</div>
+    <div class="comp-row" id="comp-row"></div>
+  </div>
+
+  <!-- Platform breakdown + Content Mix -->
+  <div class="section-gap">
+    <div class="section-label">Platform Performance — Prime Video</div>
+    <div class="charts-2col">
+      <div class="card">
+        <div class="chart-title">Engagements &amp; Impressions by Platform</div>
+        <div class="chart-sub">Dual axis — left: engagements, right: impressions</div>
+        <div id="platform-pills" class="platform-pills"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-platform"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chart-title">Content Mix</div>
+        <div class="chart-sub">By post count across all Prime platforms</div>
+        <div class="chart-wrap tall" style="display:flex;align-items:center;justify-content:center;">
+          <canvas id="chart-content-mix" style="max-height:280px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Competitive by Platform -->
+  <div class="section-gap">
+    <div class="section-label">Competitive Engagements by Platform</div>
+    <div class="card">
+      <div class="chart-title">Prime Video vs. NBC vs. ESPN — Engagements per Platform</div>
+      <div class="chart-sub">Logarithmic scale — ESPN Instagram (27.5M) anchors the top end</div>
+      <div class="chart-wrap tall">
+        <canvas id="chart-comp-platform"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- WoW + Engagement Breakdown -->
+  <div class="section-gap">
+    <div class="section-label">Trends &amp; Engagement Breakdown</div>
+    <div class="charts-2col-even">
+      <div class="card">
+        <div class="chart-title">Week-over-Week Performance</div>
+        <div class="chart-sub">Prime Video — past 3 reporting periods</div>
+        <div class="chart-wrap tall">
+          <canvas id="chart-wow"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chart-title">Engagement Type Breakdown</div>
+        <div class="chart-sub">Total engagements by interaction type — Prime Video</div>
+        <div class="chart-wrap tall">
+          <canvas id="chart-eng-breakdown"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Posts Table -->
+  <div class="section-gap">
+    <div class="section-label">Top 10 Posts by Engagements — Prime Video</div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Platform</th>
+              <th>Type</th>
+              <th>Message</th>
+              <th>Engagements</th>
+              <th>Video Views</th>
+              <th>ER%</th>
+            </tr>
+          </thead>
+          <tbody id="top-posts-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Future Banner -->
+  <div class="api-banner">
+    <div class="api-icon">🔌</div>
+    <div>
+      <div class="api-text-title">Ready for live API integration</div>
+      <div class="api-text-sub">Replace the data block in this file with a single fetch() call to connect to a live endpoint. Schema is pre-defined.</div>
+    </div>
+    <div class="api-code">fetch('/api/nba-recap')</div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+  DASHBOARD LOGIC
+════════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  const D = window.NBA_DASHBOARD_DATA;
+
+  const MONTH_SHORT = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+  function periodToDate(periodStr, year) {
+    const m = String(periodStr).trim().match(/^(\w{3})\s+(\d+)/);
+    if (!m) return null;
+    const mon = MONTH_SHORT[m[1]];
+    if (mon == null) return null;
+    return new Date(year, mon, parseInt(m[2], 10));
+  }
+  function isoFromDate(d) {
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + mo + '-' + day;
+  }
+  function parseISODate(s) {
+    if (!s) return null;
+    const p = s.split('-');
+    return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+  }
+  function formatRangeShort(d0, d1) {
+    const opts = { month: 'short', day: 'numeric', year: 'numeric' };
+    return d0.toLocaleDateString(undefined, opts) + ' – ' + d1.toLocaleDateString(undefined, opts);
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────────────
+  function fmtNum(n) {
+    if (n == null) return '—';
+    if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return n.toLocaleString();
+  }
+  function fmtFull(n) {
+    if (n == null) return '—';
+    return n.toLocaleString();
+  }
+  function fmtPct(n) { return n.toFixed(2) + '%'; }
+
+  const PLATFORM_COLORS = {
+    Twitter:   '#1DA1F2',
+    Instagram: '#E1306C',
+    Facebook:  '#4D8FF5',
+    YouTube:   '#FF0000',
+  };
+  const PLATFORM_BADGES = {
+    Twitter:   'badge-tw',
+    Instagram: 'badge-ig',
+    Facebook:  'badge-fb',
+    YouTube:   'badge-yt',
+  };
+  const CONTENT_BADGES = {
+    Video:    'badge-video',
+    Carousel: 'badge-carousel',
+    Photo:    'badge-photo',
+    Text:     'badge-text',
+  };
+
+  // ── Chart defaults ────────────────────────────────────────────────────
+  Chart.defaults.color = '#7A92A8';
+  Chart.defaults.font.family = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
+  Chart.defaults.font.size = 12;
+
+  const gridColor  = '#1C2B3A';
+  const tickColor  = '#7A92A8';
+
+  // ── Header + date filter (WoW chart) ─────────────────────────────────
+  const reportYear = D.meta.reportYear || 2026;
+  const wData = D.weekOverWeek;
+  const periodDates = wData.periods.map(function (p) { return periodToDate(p, reportYear); });
+  const rangeStart = periodDates[0];
+  const rangeEnd = periodDates[periodDates.length - 1];
+  const elStart = document.getElementById('filter-start');
+  const elEnd = document.getElementById('filter-end');
+  elStart.value = isoFromDate(rangeStart);
+  elEnd.value = isoFromDate(rangeEnd);
+
+  document.getElementById('hdr-title').textContent = D.meta.reportTitle;
+  document.getElementById('hdr-updated').textContent = 'Updated ' + D.meta.lastUpdated;
+
+  function updateHdrDateBadge() {
+    const s = parseISODate(elStart.value);
+    const e = parseISODate(elEnd.value);
+    if (!s || !e) {
+      document.getElementById('hdr-date').textContent = D.meta.gameDate;
+      return;
+    }
+    document.getElementById('hdr-date').textContent = formatRangeShort(s, e);
+  }
+  updateHdrDateBadge();
+
+  let chartWow;
+  function applyWowFilter() {
+    if (!chartWow) return;
+    let s = parseISODate(elStart.value);
+    let e = parseISODate(elEnd.value);
+    if (!s || !e) return;
+    if (s > e) {
+      const t = s; s = e; e = t;
+      elStart.value = isoFromDate(s);
+      elEnd.value = isoFromDate(e);
+    }
+    const idx = [];
+    for (let i = 0; i < periodDates.length; i++) {
+      const d = periodDates[i];
+      if (d && d >= s && d <= e) idx.push(i);
+    }
+    if (idx.length === 0) {
+      chartWow.data.labels = ['No data in range'];
+      chartWow.data.datasets[0].data = [null];
+      chartWow.data.datasets[1].data = [null];
+    } else {
+      chartWow.data.labels = idx.map(function (i) { return wData.periods[i]; });
+      chartWow.data.datasets[0].data = idx.map(function (i) { return wData.engagements[i]; });
+      chartWow.data.datasets[1].data = idx.map(function (i) { return wData.impressions[i]; });
+    }
+    chartWow.update();
+    updateHdrDateBadge();
+  }
+  elStart.addEventListener('change', applyWowFilter);
+  elEnd.addEventListener('change', applyWowFilter);
+  elStart.addEventListener('input', applyWowFilter);
+  elEnd.addEventListener('input', applyWowFilter);
+
+  // ── KPI Cards ─────────────────────────────────────────────────────────
+  document.getElementById('kpi-eng').textContent = fmtNum(D.prime.kpi.totalEngagements);
+  document.getElementById('kpi-imp').textContent = fmtNum(D.prime.kpi.totalImpressions);
+  document.getElementById('kpi-vid').textContent = fmtNum(D.prime.kpi.videoViews);
+  document.getElementById('kpi-er').textContent  = fmtPct(D.prime.kpi.avgEngagementRate);
+
+  // ── Competitive Scorecard ─────────────────────────────────────────────
+  const compRow = document.getElementById('comp-row');
+  const compClasses = ['prime', 'nbc', 'espn'];
+  D.competitive.totals.forEach(function (c, i) {
+    const cls = compClasses[i];
+    const card = document.createElement('div');
+    card.className = 'comp-card';
+    card.innerHTML = `
+      <div class="comp-header ${cls}">
+        <span class="comp-name ${cls}">${c.name}</span>
+        <span class="comp-posts-badge">${fmtNum(c.posts)} posts</span>
+      </div>
+      <div class="comp-metrics">
+        <div class="comp-metric">
+          <span class="comp-metric-label">Total Engagements</span>
+          <span class="comp-metric-value ${cls === 'prime' ? 'highlight' : ''}">${fmtNum(c.engagements)}</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-metric-label">Total Impressions</span>
+          <span class="comp-metric-value">${fmtNum(c.impressions)}</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-metric-label">Avg Engagement Rate</span>
+          <span class="comp-metric-value">${fmtPct(c.er)}</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-metric-label">Eng per Post</span>
+          <span class="comp-metric-value">${fmtNum(Math.round(c.engagements / c.posts))}</span>
+        </div>
+      </div>`;
+    compRow.appendChild(card);
+  });
+
+  // ── Platform Pills ────────────────────────────────────────────────────
+  const pillsContainer = document.getElementById('platform-pills');
+  D.prime.platforms.forEach(function (p) {
+    const pill = document.createElement('div');
+    pill.className = 'platform-pill';
+    pill.innerHTML = `
+      <div class="platform-dot" style="background:${PLATFORM_COLORS[p.name] || '#888'}"></div>
+      <div class="platform-pill-info">
+        <div class="platform-pill-name">${p.name}</div>
+        <div class="platform-pill-eng">${fmtNum(p.engagements)}</div>
+        <div class="platform-pill-er">${fmtPct(p.er)} ER · ${p.posts} posts</div>
+      </div>`;
+    pillsContainer.appendChild(pill);
+  });
+
+  // ── Chart 1: Platform Performance (dual Y) ───────────────────────────
+  new Chart(document.getElementById('chart-platform'), {
+    type: 'bar',
+    data: {
+      labels: D.prime.platforms.map(function (p) { return p.name; }),
+      datasets: [
+        {
+          label: 'Engagements',
+          data: D.prime.platforms.map(function (p) { return p.engagements; }),
+          backgroundColor: '#00A8E0',
+          borderRadius: 5,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Impressions',
+          data: D.prime.platforms.map(function (p) { return p.impressions; }),
+          backgroundColor: '#FF9900',
+          borderRadius: 5,
+          yAxisID: 'y1',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tickColor, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              return ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.raw);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: {
+          type: 'linear', position: 'left',
+          ticks: { color: tickColor, callback: fmtNum },
+          grid: { color: gridColor },
+          title: { display: true, text: 'Engagements', color: '#00A8E0', font: { size: 11 } },
+        },
+        y1: {
+          type: 'linear', position: 'right',
+          ticks: { color: '#FF9900', callback: fmtNum },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Impressions', color: '#FF9900', font: { size: 11 } },
+        },
+      },
+    },
+  });
+
+  // ── Chart 2: Content Mix Donut ────────────────────────────────────────
+  new Chart(document.getElementById('chart-content-mix'), {
+    type: 'doughnut',
+    data: {
+      labels: D.prime.contentMix.map(function (c) { return c.label + ' (' + c.pct + '%)'; }),
+      datasets: [{
+        data: D.prime.contentMix.map(function (c) { return c.count; }),
+        backgroundColor: ['#00A8E0', '#FF9900', '#1ABC9C', '#3D5166'],
+        borderColor: '#0D1520',
+        borderWidth: 3,
+        hoverOffset: 8,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      cutout: '66%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: tickColor, padding: 14, boxWidth: 12, font: { size: 11 } },
+        },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              return ' ' + ctx.label + ': ' + fmtNum(ctx.raw) + ' posts';
+            }
+          }
+        },
+      },
+    },
+  });
+
+  // ── Chart 3: Competitive by Platform (log scale) ─────────────────────
+  new Chart(document.getElementById('chart-comp-platform'), {
+    type: 'bar',
+    data: {
+      labels: D.competitive.byPlatform.labels,
+      datasets: [
+        {
+          label: 'Prime Video',
+          data: D.competitive.byPlatform.prime,
+          backgroundColor: '#00A8E0',
+          borderRadius: 5,
+        },
+        {
+          label: 'NBC',
+          data: D.competitive.byPlatform.nbc,
+          backgroundColor: '#8E44AD',
+          borderRadius: 5,
+        },
+        {
+          label: 'ESPN',
+          data: D.competitive.byPlatform.espn,
+          backgroundColor: '#C0392B',
+          borderRadius: 5,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tickColor, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              return ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.raw);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: {
+          type: 'logarithmic',
+          ticks: {
+            color: tickColor,
+            callback: function (v) {
+              if ([100, 1000, 10000, 100000, 1000000, 10000000, 100000000].indexOf(v) >= 0) {
+                return fmtNum(v);
+              }
+              return null;
+            },
+          },
+          grid: { color: gridColor },
+        },
+      },
+    },
+  });
+
+  // ── Chart 4: Week-over-Week Line ──────────────────────────────────────
+  chartWow = new Chart(document.getElementById('chart-wow'), {
+    type: 'line',
+    data: {
+      labels: D.weekOverWeek.periods,
+      datasets: [
+        {
+          label: 'Engagements',
+          data: D.weekOverWeek.engagements,
+          borderColor: '#00A8E0',
+          backgroundColor: 'rgba(0,168,224,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBackgroundColor: '#00A8E0',
+          yAxisID: 'y',
+        },
+        {
+          label: 'Impressions',
+          data: D.weekOverWeek.impressions,
+          borderColor: '#FF9900',
+          backgroundColor: 'rgba(255,153,0,0.06)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBackgroundColor: '#FF9900',
+          yAxisID: 'y1',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tickColor, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              return ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.raw);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: {
+          type: 'linear', position: 'left',
+          ticks: { color: '#00A8E0', callback: fmtNum },
+          grid: { color: gridColor },
+          title: { display: true, text: 'Engagements', color: '#00A8E0', font: { size: 11 } },
+        },
+        y1: {
+          type: 'linear', position: 'right',
+          ticks: { color: '#FF9900', callback: fmtNum },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Impressions', color: '#FF9900', font: { size: 11 } },
+        },
+      },
+    },
+  });
+
+  // ── Chart 5: Engagement Breakdown Horizontal Bar ─────────────────────
+  const eb = D.prime.engagementBreakdown;
+  new Chart(document.getElementById('chart-eng-breakdown'), {
+    type: 'bar',
+    data: {
+      labels: ['Likes', 'FB Reactions', 'Comments', 'Shares / RTs'],
+      datasets: [{
+        data: [eb.likes, eb.fbReactions, eb.comments, eb.sharesRetweets],
+        backgroundColor: ['#00A8E0', '#E91E8C', '#1ABC9C', '#FF9900'],
+        borderRadius: 6,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) { return '  ' + fmtFull(ctx.raw); }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: tickColor, callback: fmtNum },
+          grid: { color: gridColor },
+        },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } },
+      },
+    },
+  });
+
+  // ── Top Posts Table ───────────────────────────────────────────────────
+  const tbody = document.getElementById('top-posts-body');
+  D.topPosts.forEach(function (p, i) {
+    const platBadge    = PLATFORM_BADGES[p.platform]    || '';
+    const contentBadge = CONTENT_BADGES[p.contentType]  || '';
+    const erClass      = p.er >= 5 ? 'high' : '';
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="color:var(--text-muted);font-weight:700;">${i + 1}</td>
+      <td><span class="badge ${platBadge}">${p.platform}</span></td>
+      <td><span class="badge ${contentBadge}">${p.contentType}</span></td>
+      <td class="msg-cell">${p.message}</td>
+      <td class="num">${fmtFull(p.engagements)}</td>
+      <td class="num" style="color:var(--text-secondary);">${p.videoViews != null ? fmtNum(p.videoViews) : '—'}</td>
+      <td><span class="er-chip ${erClass}">${fmtPct(p.er)}</span></td>`;
+    tbody.appendChild(row);
+  });
+
+})();
+</script>
+</body>
+</html>
