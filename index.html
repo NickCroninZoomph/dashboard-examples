@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboards</title>
+  <style>
+    :root {
+      --bg: #060a10;
+      --card: #0f1620;
+      --border: #1e2a3a;
+      --text: #e8eef5;
+      --muted: #7a8fa3;
+      --accent: #00a8e0;
+      --accent2: #0093ce;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    main {
+      max-width: 520px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    ul { list-style: none; }
+    li + li { margin-top: 12px; }
+    a {
+      display: block;
+      padding: 16px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    a:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0, 168, 224, 0.2);
+    }
+    a span {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    a.nba { border-left: 3px solid var(--accent); }
+    a.inv { border-left: 3px solid var(--accent2); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Reports</h1>
+    <p>Open a dashboard below. These pages are static and work on GitHub Pages.</p>
+    <ul>
+      <li>
+        <a class="nba" href="nba-prime-dashboard/">
+          NBA on Prime — Social Dashboard
+          <span>Competitive scorecard, platforms, top posts</span>
+        </a>
+      </li>
+      <li>
+        <a class="inv" href="invisalign-nfl-dashboard/">
+          Invisalign NFL Sponsorship Report
+          <span>Overview, teams, programs, exposure, top posts</span>
+        </a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>

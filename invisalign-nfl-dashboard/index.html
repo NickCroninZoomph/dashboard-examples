@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invisalign NFL Sponsorship Report — December 2025</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --bg:           #07101C;
+  --surface:      #0C1928;
+  --elevated:     #112236;
+  --border:       #1A2E42;
+  --border-light: #213A52;
+
+  --invis-blue:   #0093CE;
+  --invis-dim:    #00679A;
+  --invis-glow:   rgba(0,147,206,0.13);
+  --invis-faint:  rgba(0,147,206,0.07);
+  --gold:         #F5A623;
+  --green:        #1CC8A0;
+  --red:          #E04C55;
+  --purple:       #9B6EE8;
+
+  --txt:          #EAF1F8;
+  --txt-2:        #6B8CA8;
+  --txt-3:        #344F64;
+
+  --sidebar-w: 220px;
+  --header-h:  60px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
+
+/* ═══════════════════════════════════════════════
+   SHELL
+═══════════════════════════════════════════════ */
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  height:100vh;overflow-y:auto;
+  position:relative;z-index:10;
+}
+.sidebar-brand{
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.brand-pill{
+  display:inline-block;background:var(--invis-blue);
+  color:#fff;font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:3px 9px;border-radius:3px;margin-bottom:8px;
+}
+.brand-name{font-size:16px;font-weight:800;letter-spacing:-0.3px;}
+.brand-sub{font-size:11px;color:var(--txt-2);margin-top:2px;}
+
+.nav-section{padding:16px 0 4px 0;}
+.nav-label{
+  font-size:9px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--txt-3);
+  padding:0 18px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 18px;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--txt-2);
+  transition:background 0.13s, color 0.13s;
+  border-left:3px solid transparent;
+  text-decoration:none;
+}
+.nav-item:hover{background:var(--elevated);color:var(--txt);}
+.nav-item.active{
+  background:var(--invis-faint);color:var(--invis-blue);
+  border-left-color:var(--invis-blue);font-weight:700;
+}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+
+.sidebar-footer{
+  margin-top:auto;padding:16px 18px;
+  border-top:1px solid var(--border);
+}
+.report-badge{
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;
+}
+.rb-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-3);}
+.rb-month{font-size:13px;font-weight:700;color:var(--invis-blue);margin-top:2px;}
+.rb-updated{font-size:10px;color:var(--txt-3);margin-top:3px;}
+
+/* ═══════════════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════════════ */
+.content{flex:1;overflow-y:auto;height:100vh;}
+.page{display:none;padding:28px 28px 48px;min-height:100%;}
+.page.active{display:block;}
+
+.content-toolbar{
+  position:sticky;top:0;z-index:15;
+  display:flex;justify-content:flex-end;align-items:center;
+  padding:12px 0 8px;margin:-8px 0 4px;
+  background:linear-gradient(to bottom,var(--bg) 88%,transparent);
+}
+.date-filter{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
+}
+.date-filter label{
+  font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt-3);
+}
+.date-filter input[type="date"]{
+  font-family:inherit;font-size:12px;font-weight:600;color:var(--txt);
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:8px;padding:6px 10px;color-scheme:dark;
+}
+.date-filter input[type="date"]:focus{
+  outline:none;border-color:var(--invis-blue);box-shadow:0 0 0 2px var(--invis-glow);
+}
+.date-filter-sep{color:var(--txt-3);font-size:13px;font-weight:600;}
+
+/* Page header */
+.page-header{margin-bottom:24px;}
+.page-title{font-size:20px;font-weight:800;letter-spacing:-0.3px;}
+.page-sub{font-size:13px;color:var(--txt-2);margin-top:4px;}
+
+/* Section label */
+.slabel{
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--invis-blue);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;
+}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+.gap{margin-bottom:26px;}
+
+/* ═══════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════ */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:20px 22px;
+}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-grid.six{grid-template-columns:repeat(3,1fr);}
+.kpi-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-top:3px solid var(--invis-blue);
+  border-radius:12px;padding:18px 20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.35),0 0 28px var(--invis-glow);
+}
+.kpi-card.gold{border-top-color:var(--gold);box-shadow:0 4px 20px rgba(0,0,0,.35),0 0 28px rgba(245,166,35,.1);}
+.kpi-card.green{border-top-color:var(--green);box-shadow:0 4px 20px rgba(0,0,0,.35),0 0 28px rgba(28,200,160,.1);}
+.kpi-card.purple{border-top-color:var(--purple);box-shadow:0 4px 20px rgba(0,0,0,.35),0 0 28px rgba(155,110,232,.1);}
+.kpi-lbl{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--txt-2);margin-bottom:7px;}
+.kpi-val{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;color:var(--invis-blue);}
+.kpi-val.gold{color:var(--gold);}
+.kpi-val.green{color:var(--green);}
+.kpi-val.white{color:var(--txt);}
+.kpi-sub{font-size:11px;color:var(--txt-3);margin-top:5px;}
+
+/* Chart card */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
+.ct{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.cs{font-size:11px;color:var(--txt-3);margin-bottom:16px;}
+.cw{position:relative;}
+.cw-260{height:260px;}
+.cw-300{height:300px;}
+.cw-220{height:220px;}
+.cw-200{height:200px;}
+
+/* Grid layouts */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g23{display:grid;grid-template-columns:3fr 2fr;gap:16px;}
+.g32{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+
+/* ═══════════════════════════════════════════════
+   TABLES
+═══════════════════════════════════════════════ */
+.tw{overflow-x:auto;border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  background:var(--elevated);color:var(--txt-2);
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1.2px;padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--txt);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,.025);transition:background .12s;}
+.num{font-variant-numeric:tabular-nums;font-weight:700;}
+.dim{color:var(--txt-2);}
+
+/* Badges */
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:3px 8px;border-radius:5px;}
+.b-fb{background:rgba(29,119,242,.18);color:#4D8FF5;}
+.b-ig{background:rgba(225,48,108,.18);color:#E1306C;}
+.b-tw{background:rgba(29,161,242,.18);color:#1DA1F2;}
+.b-photo{background:rgba(0,147,206,.14);color:var(--invis-blue);}
+.b-video{background:rgba(245,166,35,.14);color:var(--gold);}
+.b-carousel{background:rgba(28,200,160,.14);color:var(--green);}
+.b-text{background:rgba(107,140,168,.14);color:var(--txt-2);}
+.b-program{background:rgba(155,110,232,.14);color:var(--purple);}
+
+/* Rank cells */
+.rank{color:var(--txt-3);font-weight:700;width:28px;}
+.rank-1{color:var(--gold);}
+.rank-2{color:var(--txt-2);}
+.rank-3{color:#CD7F32;}
+
+/* Team pill */
+.team-pill{display:flex;align-items:center;gap:8px;}
+.team-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* Value bar */
+.val-bar-wrap{display:flex;align-items:center;gap:8px;}
+.val-bar{height:6px;border-radius:3px;background:var(--invis-blue);min-width:4px;transition:width .3s;}
+.val-bar.gold{background:var(--gold);}
+
+/* Chip */
+.chip{
+  display:inline-block;font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:5px;
+  background:rgba(0,147,206,.12);color:var(--invis-blue);
+}
+.chip.gold{background:rgba(245,166,35,.14);color:var(--gold);}
+.chip.green{background:rgba(28,200,160,.14);color:var(--green);}
+
+/* Asset badge */
+.asset-badge{
+  font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
+  text-transform:uppercase;letter-spacing:.7px;white-space:nowrap;
+}
+.ab-overlay{background:rgba(0,147,206,.18);color:var(--invis-blue);}
+.ab-text{background:rgba(245,166,35,.14);color:var(--gold);}
+.ab-board{background:rgba(28,200,160,.14);color:var(--green);}
+.ab-led{background:rgba(155,110,232,.14);color:var(--purple);}
+.ab-backdrop{background:rgba(224,76,85,.14);color:var(--red);}
+.ab-sign{background:rgba(107,140,168,.14);color:var(--txt-2);}
+
+/* Exposure bar */
+.exp-bar-row{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-bottom:1px solid var(--border);}
+.exp-bar-row:last-child{border-bottom:none;}
+.exp-bar-header{display:flex;justify-content:space-between;align-items:center;}
+.exp-bar-name{font-size:13px;font-weight:600;}
+.exp-bar-val{font-size:13px;font-weight:700;color:var(--invis-blue);}
+.exp-bar-track{height:8px;background:var(--elevated);border-radius:4px;overflow:hidden;}
+.exp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--invis-dim),var(--invis-blue));}
+.exp-bar-meta{font-size:11px;color:var(--txt-3);}
+
+/* Clarity gauge */
+.clarity-wrap{display:flex;align-items:center;gap:6px;}
+.clarity-dots{display:flex;gap:3px;}
+.clarity-dot{width:8px;height:8px;border-radius:2px;}
+.clarity-dot.active{background:var(--invis-blue);}
+.clarity-dot.inactive{background:var(--border);}
+
+/* Score circle */
+.score-circle{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;
+  background:conic-gradient(var(--invis-blue) var(--pct), var(--elevated) 0);
+  position:relative;
+}
+.score-inner{
+  width:34px;height:34px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--invis-blue);
+  position:absolute;
+}
+
+/* Msg cell */
+.msg-cell{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt-2);font-size:12px;}
+
+/* ═══════════════════════════════════════════════
+   OVERVIEW PAGE — hero band
+═══════════════════════════════════════════════ */
+.hero{
+  background:linear-gradient(135deg,#001A2E 0%,#061826 50%,var(--bg) 100%);
+  border:1px solid var(--border);border-radius:14px;
+  padding:24px 28px;margin-bottom:26px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.hero-left{}
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--invis-blue);margin-bottom:6px;}
+.hero-title{font-size:26px;font-weight:800;letter-spacing:-0.5px;}
+.hero-sub{font-size:13px;color:var(--txt-2);margin-top:4px;}
+.hero-right{display:flex;gap:20px;flex-shrink:0;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-size:22px;font-weight:800;color:var(--invis-blue);}
+.hero-stat-lbl{font-size:10px;color:var(--txt-2);text-transform:uppercase;letter-spacing:1px;}
+
+/* ═══════════════════════════════════════════════
+   PLATFORM PILLS
+═══════════════════════════════════════════════ */
+.plat-pills{display:flex;gap:12px;}
+.plat-pill{
+  flex:1;background:var(--elevated);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;
+}
+.plat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.plat-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--txt-2);}
+.plat-eng{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+.plat-meta{font-size:11px;color:var(--txt-3);}
+
+/* ═══════════════════════════════════════════════
+   TEAM PAGE — team cards grid
+═══════════════════════════════════════════════ */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.team-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px 18px;
+  transition:border-color .15s,box-shadow .15s;cursor:default;
+}
+.team-card:hover{border-color:var(--border-light);box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.tc-rank{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--txt-3);margin-bottom:6px;}
+.tc-name{font-size:14px;font-weight:800;margin-bottom:10px;}
+.tc-bar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.tc-bar-label{font-size:11px;color:var(--txt-2);width:90px;}
+.tc-bar-track{flex:1;height:5px;background:var(--elevated);border-radius:3px;overflow:hidden;margin:0 8px;}
+.tc-bar-fill{height:100%;border-radius:3px;background:var(--invis-blue);}
+.tc-bar-fill.gold{background:var(--gold);}
+.tc-bar-val{font-size:12px;font-weight:700;min-width:52px;text-align:right;color:var(--txt);}
+.tc-meta{display:flex;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.tc-meta-item{font-size:11px;color:var(--txt-2);}
+.tc-meta-item b{color:var(--txt);font-weight:700;}
+
+/* ═══════════════════════════════════════════════
+   PROGRAM PAGE — program cards
+═══════════════════════════════════════════════ */
+.prog-list{display:flex;flex-direction:column;gap:8px;}
+.prog-row{
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;
+  display:grid;grid-template-columns:200px 1fr 1fr 1fr 1fr 1fr;
+  align-items:center;gap:16px;
+}
+.prog-row.header{
+  background:transparent;border-color:transparent;
+  font-size:10px;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--txt-3);
+  padding-bottom:4px;
+}
+.prog-name{font-size:13px;font-weight:700;}
+.prog-posts{font-size:13px;color:var(--txt-2);}
+.prog-num{font-size:13px;font-weight:700;}
+.prog-bar-cell{display:flex;align-items:center;gap:8px;}
+.prog-bar{height:6px;border-radius:3px;background:var(--invis-blue);min-width:4px;}
+
+/* ═══════════════════════════════════════════════
+   BRAND EXPOSURE PAGE
+═══════════════════════════════════════════════ */
+.asset-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px;}
+.asset-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;
+}
+.ac-icon{font-size:22px;margin-bottom:10px;}
+.ac-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-2);margin-bottom:4px;}
+.ac-val{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--invis-blue);}
+.ac-det{font-size:11px;color:var(--txt-3);margin-top:4px;}
+.ac-bar{height:4px;border-radius:2px;background:var(--invis-blue);margin-top:12px;}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .g2,.g23,.g32{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+  .prog-row{grid-template-columns:160px 1fr 1fr 1fr;}
+}
+@media(max-width:780px){
+  :root{--sidebar-w:60px;}
+  .brand-name,.brand-sub,.nav-label,.nav-item span,.sidebar-footer{display:none;}
+  .nav-item{justify-content:center;padding:12px;}
+  .nav-icon{width:auto;}
+  .team-grid{grid-template-columns:1fr;}
+  .asset-cards{grid-template-columns:1fr 1fr;}
+  .page{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+  DATA
+═══════════════════════════════════════════════════════ -->
+<script>
+window.INV = {
+  meta: {
+    brand: "Invisalign",
+    league: "NFL",
+    month: "December 2025",
+    updated: "April 6, 2026",
+    source: "invisalign dec 25.xlsx"
+  },
+  kpis: {
+    posts: 259,
+    impressions: 52412307,
+    engagements: 1565713,
+    socialValue: 1283925,
+    brandValue: 593496,
+    exposureValue: 605588,
+    teams: 12
+  },
+  platforms: [
+    { name:"Facebook",  posts:97, impressions:30722571, engagements:301654,  er:0.91, socialValue:607269,  brandValue:259313 },
+    { name:"Instagram", posts:64, impressions:16159069, engagements:1106198, er:6.42, socialValue:427855,  brandValue:211475 },
+    { name:"Twitter",   posts:98, impressions:5530667,  engagements:157861,  er:2.94, socialValue:248801,  brandValue:122707 }
+  ],
+  weekly: {
+    labels: ["Dec 1–7","Dec 8–14","Dec 15–21","Dec 22–28","Dec 29–31"],
+    posts:       [53,  78,  72,  46,  10 ],
+    impressions: [7697041, 15806197, 17856030, 9415594, 1637445],
+    engagements: [233715, 605756, 427053, 238345, 60844]
+  },
+  teams: [
+    { name:"Green Bay Packers",     posts:77, impressions:27292055, engagements:747034, socialValue:633346, brandValue:299115, exposure:302789 },
+    { name:"New England Patriots",  posts:12, impressions:3438763,  engagements:130732, socialValue:92954,  brandValue:45868,  exposure:44820  },
+    { name:"Denver Broncos",        posts:14, impressions:2863511,  engagements:101912, socialValue:79398,  brandValue:43975,  exposure:44170  },
+    { name:"New Orleans Saints",    posts:21, impressions:3692106,  engagements:66450,  socialValue:72831,  brandValue:37873,  exposure:37983  },
+    { name:"Dallas Cowboys",        posts:12, impressions:2863287,  engagements:78566,  socialValue:59254,  brandValue:33240,  exposure:35104  },
+    { name:"Chicago Bears",         posts:15, impressions:3276337,  engagements:146447, socialValue:108978, brandValue:33707,  exposure:34176  },
+    { name:"New York Giants",       posts:30, impressions:2324817,  engagements:79795,  socialValue:66846,  brandValue:33584,  exposure:33730  },
+    { name:"Baltimore Ravens",      posts:12, impressions:2168143,  engagements:88880,  socialValue:54293,  brandValue:24817,  exposure:24879  },
+    { name:"Tampa Bay Buccaneers",  posts:16, impressions:1706323,  engagements:32585,  socialValue:37806,  brandValue:20126,  exposure:20595  },
+    { name:"Los Angeles Rams",      posts:6,  impressions:1039568,  engagements:46206,  socialValue:33552,  brandValue:10173,  exposure:9360   },
+    { name:"Arizona Cardinals",     posts:31, impressions:647376,   engagements:15206,  socialValue:13101,  brandValue:7063,   exposure:7063   },
+    { name:"Atlanta Falcons",       posts:13, impressions:1100021,  engagements:31900,  socialValue:31566,  brandValue:3956,   exposure:3973   }
+  ],
+  programs: [
+    { name:"Happy Birthday",          posts:111, impressions:20725873, engagements:642940, socialValue:505400, brandValue:261078 },
+    { name:"Packers Score Graphic",   posts:26,  impressions:17192248, engagements:477480, socialValue:374260, brandValue:196926 },
+    { name:"Packers Player Entrances",posts:12,  impressions:3900777,  engagements:121584, socialValue:115839, brandValue:53330  },
+    { name:"Player Game Arrivals",    posts:60,  impressions:2928147,  engagements:94925,  socialValue:79549,  brandValue:40415  },
+    { name:"Ravens Game Threads",     posts:12,  impressions:2168143,  engagements:88880,  socialValue:54293,  brandValue:24817  },
+    { name:"Invisalign Videos",       posts:6,   impressions:1370125,  engagements:51932,  socialValue:43674,  brandValue:2907   },
+    { name:"Invisalign Celebration",  posts:6,   impressions:1039568,  engagements:46206,  socialValue:33552,  brandValue:10173  },
+    { name:"Hawks Win Cam",           posts:9,   impressions:881355,   engagements:29841,  socialValue:27552,  brandValue:1768   },
+    { name:"Packers Press Conference",posts:14,  impressions:2043666,  engagements:11534,  socialValue:48203,  brandValue:819   },
+    { name:"Youth Football Camp",     posts:2,   impressions:118359,   engagements:315,    socialValue:1205,   brandValue:1033   },
+    { name:"Sweepstakes",             posts:1,   impressions:44046,    engagements:76,     socialValue:398,    brandValue:232    }
+  ],
+  exposure: {
+    total: 605588,
+    byAsset: [
+      { name:"Digital Overlay",    cls:"ab-overlay", detections:301, value:560218, pct:92.5, clarity:1.000, size:0.020 },
+      { name:"Text Mention",       cls:"ab-text",    detections:53,  value:29536,  pct:4.9,  clarity:null,  size:null  },
+      { name:"Videoboard",         cls:"ab-board",   detections:5,   value:531,    pct:0.09, clarity:0.366, size:0.006 },
+      { name:"LED Ribbonboard",    cls:"ab-led",     detections:11,  value:401,    pct:0.07, clarity:0.718, size:0.005 },
+      { name:"Media Backdrop",     cls:"ab-backdrop",detections:32,  value:126,    pct:0.02, clarity:0.300, size:0.006 },
+      { name:"Stadium Signage",    cls:"ab-sign",    detections:3,   value:34,     pct:0.01, clarity:0.332, size:0.002 }
+    ],
+    byTeam: [
+      { name:"Green Bay Packers",    detections:174, value:302789, clarity:0.685, size:0.011 },
+      { name:"New England Patriots", detections:13,  value:44820,  clarity:0.904, size:0.011 },
+      { name:"Denver Broncos",       detections:34,  value:44170,  clarity:0.610, size:0.013 },
+      { name:"New Orleans Saints",   detections:43,  value:37983,  clarity:0.975, size:0.014 },
+      { name:"Dallas Cowboys",       detections:32,  value:35104,  clarity:0.830, size:0.018 },
+      { name:"Chicago Bears",        detections:17,  value:34176,  clarity:0.928, size:0.017 },
+      { name:"New York Giants",      detections:79,  value:33730,  clarity:0.691, size:0.012 },
+      { name:"Baltimore Ravens",     detections:19,  value:24879,  clarity:0.874, size:0.013 },
+      { name:"Tampa Bay Buccaneers", detections:22,  value:20595,  clarity:1.000, size:0.019 },
+      { name:"Los Angeles Rams",     detections:29,  value:9360,   clarity:0.811, size:0.005 },
+      { name:"Arizona Cardinals",    detections:65,  value:7063,   clarity:0.974, size:0.028 },
+      { name:"Atlanta Falcons",      detections:26,  value:3973,   clarity:0.722, size:0.011 }
+    ]
+  },
+  topPosts: [
+    { platform:"Instagram", team:"Green Bay Packers",    type:"Photo",    program:"Packers Score Graphic",    msg:"ELECTRIC — invisalign",                                        engagements:161318, impressions:1650113, socialValue:54995, er:11.48 },
+    { platform:"Instagram", team:"Green Bay Packers",    type:"Photo",    program:"Packers Score Graphic",    msg:"Final — invisalign",                                           engagements:47223,  impressions:462342,  socialValue:15935, er:9.20  },
+    { platform:"Instagram", team:"Chicago Bears",        type:"Photo",    program:"Happy Birthday",           msg:"Happy glo day, lutherburden3!",                               engagements:42434,  impressions:421613,  socialValue:15528, er:9.77  },
+    { platform:"Instagram", team:"Dallas Cowboys",       type:"Photo",    program:"Happy Birthday",           msg:"HBD, Q — #DallasCowboys | invisalign",                        engagements:41933,  impressions:473754,  socialValue:15805, er:9.19  },
+    { platform:"Facebook",  team:"Green Bay Packers",    type:"Video",    program:"Packers Score Graphic",    msg:"ELECTRIC",                                                     engagements:38587,  impressions:2879284, socialValue:61990, er:1.34  },
+    { platform:"Instagram", team:"Green Bay Packers",    type:"Photo",    program:"Packers Score Graphic",    msg:"Final — invisalign",                                           engagements:36447,  impressions:1137107, socialValue:18470, er:8.05  },
+    { platform:"Instagram", team:"Green Bay Packers",    type:"Photo",    program:"Packers Score Graphic",    msg:"Final — invisalign",                                           engagements:32884,  impressions:655421,  socialValue:13734, er:8.42  },
+    { platform:"Instagram", team:"Green Bay Packers",    type:"Photo",    program:"Packers Score Graphic",    msg:"Final — invisalign",                                           engagements:31846,  impressions:645693,  socialValue:13387, er:8.08  },
+    { platform:"Instagram", team:"Chicago Bears",        type:"Video",    program:"Invisalign Videos",        msg:"Need to take these guys Christmas caroling",                   engagements:30458,  impressions:501309,  socialValue:11885, er:8.37  },
+    { platform:"Instagram", team:"New England Patriots", type:"Photo",    program:"Happy Birthday",           msg:"Happy birthday, CD #7",                                        engagements:29855,  impressions:360193,  socialValue:11182, er:9.46  }
+  ]
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+  MARKUP
+═══════════════════════════════════════════════════════ -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-pill">Invisalign</div>
+      <div class="brand-name">NFL Sponsorship</div>
+      <div class="brand-sub">Monthly Performance Report</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Report</div>
+      <a class="nav-item active" data-page="overview">
+        <span class="nav-icon">📊</span><span>Overview</span>
+      </a>
+      <a class="nav-item" data-page="teams">
+        <span class="nav-icon">🏈</span><span>Team Performance</span>
+      </a>
+      <a class="nav-item" data-page="programs">
+        <span class="nav-icon">🎯</span><span>Content Programs</span>
+      </a>
+      <a class="nav-item" data-page="exposure">
+        <span class="nav-icon">👁</span><span>Brand Exposure</span>
+      </a>
+      <a class="nav-item" data-page="posts">
+        <span class="nav-icon">⭐</span><span>Top Posts</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="report-badge">
+        <div class="rb-label">Report Period</div>
+        <div class="rb-month" id="sb-month"></div>
+        <div class="rb-updated" id="sb-updated"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="content-toolbar">
+      <div class="date-filter" role="group" aria-label="Filter weekly trends by date range">
+        <label for="inv-filter-start">From</label>
+        <input type="date" id="inv-filter-start" />
+        <span class="date-filter-sep" aria-hidden="true">–</span>
+        <label for="inv-filter-end">To</label>
+        <input type="date" id="inv-filter-end" />
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+      PAGE 1: OVERVIEW
+    ══════════════════════════════════════ -->
+    <div id="page-overview" class="page active">
+      <div class="hero">
+        <div class="hero-left">
+          <div class="hero-eyebrow">NFL Sponsorship Recap</div>
+          <div class="hero-title" id="ov-title"></div>
+          <div class="hero-sub">Tracking Invisalign brand activity across 12 NFL team partners</div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="ov-teams"></div>
+            <div class="hero-stat-lbl">Teams Active</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="ov-posts"></div>
+            <div class="hero-stat-lbl">Total Posts</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="ov-programs"></div>
+            <div class="hero-stat-lbl">Programs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Key Performance Indicators</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Total Impressions</div>
+            <div class="kpi-val" id="ov-impressions"></div>
+            <div class="kpi-sub">Across FB, IG, Twitter</div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-lbl">Total Engagements</div>
+            <div class="kpi-val gold" id="ov-engagements"></div>
+            <div class="kpi-sub">Likes, comments, shares</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-lbl">Social Value</div>
+            <div class="kpi-val green" id="ov-social-value"></div>
+            <div class="kpi-sub">Estimated earned media value</div>
+          </div>
+          <div class="kpi-card purple">
+            <div class="kpi-lbl">Brand Exposure Value</div>
+            <div class="kpi-val" style="color:var(--purple)" id="ov-exposure"></div>
+            <div class="kpi-sub">Logo detection value</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Platform Breakdown</div>
+        <div class="plat-pills" id="ov-plat-pills"></div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Monthly Activity Trends</div>
+        <div class="g2">
+          <div class="chart-card">
+            <div class="ct">Weekly Engagements &amp; Impressions</div>
+            <div class="cs">December 2025 — dual axis</div>
+            <div class="cw cw-260"><canvas id="chart-weekly"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="ct">Top 5 Teams by Brand Value</div>
+            <div class="cs">Estimated brand media value generated</div>
+            <div class="cw cw-260"><canvas id="chart-top-teams"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Content Mix</div>
+        <div class="g2">
+          <div class="chart-card">
+            <div class="ct">Posts by Platform</div>
+            <div class="cs">Volume distribution across channels</div>
+            <div class="cw cw-220"><canvas id="chart-plat-posts"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="ct">Engagements by Platform</div>
+            <div class="cs">Instagram dominates engagement share</div>
+            <div class="cw cw-220"><canvas id="chart-plat-eng"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+      PAGE 2: TEAMS
+    ══════════════════════════════════════ -->
+    <div id="page-teams" class="page">
+      <div class="page-header">
+        <div class="page-title">Team Performance</div>
+        <div class="page-sub">All 12 Invisalign NFL partner teams — December 2025</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Brand Value by Team</div>
+        <div class="chart-card">
+          <div class="ct">Brand Value + Engagements by Team</div>
+          <div class="cs">Grouped comparison — Green Bay Packers accounts for ~50% of total brand value</div>
+          <div class="cw cw-300"><canvas id="chart-teams-bar"></canvas></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Team Scorecards</div>
+        <div class="team-grid" id="team-cards"></div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Full Team Rankings</div>
+        <div class="card" style="padding:0;">
+          <div class="tw">
+            <table id="team-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Team</th>
+                  <th>Posts</th>
+                  <th>Impressions</th>
+                  <th>Engagements</th>
+                  <th>Social Value</th>
+                  <th>Brand Value</th>
+                  <th>Exposure Value</th>
+                  <th>Avg ER</th>
+                </tr>
+              </thead>
+              <tbody id="team-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+      PAGE 3: CONTENT PROGRAMS
+    ══════════════════════════════════════ -->
+    <div id="page-programs" class="page">
+      <div class="page-header">
+        <div class="page-title">Content Programs</div>
+        <div class="page-sub">Invisalign activation types across NFL partner teams</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Program Overview</div>
+        <div class="g2">
+          <div class="chart-card">
+            <div class="ct">Engagements by Program</div>
+            <div class="cs">Happy Birthday &amp; Score Graphics drive the most engagement</div>
+            <div class="cw cw-300"><canvas id="chart-prog-eng"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="ct">Impressions by Program</div>
+            <div class="cs">Reach distribution across activation types</div>
+            <div class="cw cw-300"><canvas id="chart-prog-imp"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Program Performance Table</div>
+        <div class="card" style="padding:0 0 8px;">
+          <div class="prog-row header">
+            <span>Program</span>
+            <span>Posts</span>
+            <span>Impressions</span>
+            <span>Engagements</span>
+            <span>Social Value</span>
+            <span>Brand Value</span>
+          </div>
+          <div id="prog-rows"></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Engagement Rate by Program</div>
+        <div class="chart-card">
+          <div class="ct">Average Engagement Rate</div>
+          <div class="cs">Engagements ÷ Impressions per program</div>
+          <div class="cw cw-260"><canvas id="chart-prog-er"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+      PAGE 4: BRAND EXPOSURE
+    ══════════════════════════════════════ -->
+    <div id="page-exposure" class="page">
+      <div class="page-header">
+        <div class="page-title">Brand Exposure</div>
+        <div class="page-sub">AI logo detection across all NFL team posts — December 2025</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Total Brand Exposure Value</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Total Exposure Value</div>
+            <div class="kpi-val" id="exp-total"></div>
+            <div class="kpi-sub">Across all assets &amp; teams</div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-lbl">Logo Detections</div>
+            <div class="kpi-val gold">586</div>
+            <div class="kpi-sub">Individual logo appearances detected</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-lbl">Dominant Asset</div>
+            <div class="kpi-val green" style="font-size:18px;">Digital Overlay</div>
+            <div class="kpi-sub">92.5% of total exposure value</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Avg Logo Clarity</div>
+            <div class="kpi-val" id="exp-clarity"></div>
+            <div class="kpi-sub">AI-scored 0–1 (Digital Overlay = 1.0)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Asset Type Breakdown</div>
+        <div class="asset-cards" id="asset-cards"></div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Exposure by Team</div>
+        <div class="g23">
+          <div class="chart-card">
+            <div class="ct">Brand Exposure Value by Team</div>
+            <div class="cs">Green Bay Packers accounts for 50% of all logo exposure value</div>
+            <div class="cw cw-300"><canvas id="chart-exp-team"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="ct">Exposure Value Distribution</div>
+            <div class="cs">Share of total $605K value</div>
+            <div class="cw cw-300"><canvas id="chart-exp-donut"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Team Exposure Detail</div>
+        <div class="card" style="padding:20px 22px;" id="exp-team-bars"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+      PAGE 5: TOP POSTS
+    ══════════════════════════════════════ -->
+    <div id="page-posts" class="page">
+      <div class="page-header">
+        <div class="page-title">Top 10 Posts</div>
+        <div class="page-sub">Highest-engagement Invisalign-branded posts — December 2025</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Performance Leaders</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Best Post Engagements</div>
+            <div class="kpi-val" id="tp-best"></div>
+            <div class="kpi-sub">Green Bay Packers — Score Graphic (IG)</div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-lbl">Best Post ER%</div>
+            <div class="kpi-val gold">11.48%</div>
+            <div class="kpi-sub">Instagram — Score Graphic "ELECTRIC"</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-lbl">Top Program</div>
+            <div class="kpi-val green" style="font-size:18px;">Score Graphic</div>
+            <div class="kpi-sub">6 of the top 10 posts are Score Graphics</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Top Platform</div>
+            <div class="kpi-val" style="color:var(--txt);">Instagram</div>
+            <div class="kpi-sub">8 of the top 10 posts are on Instagram</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Top Posts by Engagement</div>
+        <div class="chart-card" style="padding:0;">
+          <div class="tw">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Platform</th>
+                  <th>Team</th>
+                  <th>Program</th>
+                  <th>Type</th>
+                  <th>Message</th>
+                  <th>Engagements</th>
+                  <th>Impressions</th>
+                  <th>Social Value</th>
+                  <th>ER%</th>
+                </tr>
+              </thead>
+              <tbody id="top-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Top Posts — Engagement Chart</div>
+        <div class="chart-card">
+          <div class="ct">Engagements — Top 10 Posts</div>
+          <div class="cs">Instagram Score Graphics dominate the leaderboard</div>
+          <div class="cw cw-300"><canvas id="chart-top-posts"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /shell -->
+
+<!-- ═══════════════════════════════════════════════════════
+  LOGIC
+═══════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  const D = window.INV;
+  const INV_WEEK_RANGES = [
+    { start: '2025-12-01', end: '2025-12-07' },
+    { start: '2025-12-08', end: '2025-12-14' },
+    { start: '2025-12-15', end: '2025-12-21' },
+    { start: '2025-12-22', end: '2025-12-28' },
+    { start: '2025-12-29', end: '2025-12-31' }
+  ];
+  function parseISODate(s){
+    if(!s)return null;
+    const p=s.split('-');
+    return new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+  }
+  function isoFromDate(d){
+    const y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+mo+'-'+day;
+  }
+  function rangesOverlap(selStart,selEnd,ws,we){
+    return selStart<=we&&ws<=selEnd;
+  }
+
+  Chart.defaults.color = '#6B8CA8';
+  Chart.defaults.font.family = "system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif";
+  Chart.defaults.font.size = 12;
+  const GRID = '#1A2E42';
+  const TICK = '#6B8CA8';
+
+  // ── Helpers ────────────────────────────────────────────────────────
+  function fmtN(n){
+    if(n==null)return'—';
+    if(n>=1e9)return(n/1e9).toFixed(2)+'B';
+    if(n>=1e6)return(n/1e6).toFixed(1)+'M';
+    if(n>=1e3)return(n/1e3).toFixed(1)+'K';
+    return n.toLocaleString();
+  }
+  function fmtD(n){
+    if(n==null)return'—';
+    return n.toLocaleString();
+  }
+  function fmtUSD(n){
+    if(n==null)return'—';
+    if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';
+    if(n>=1e3)return'$'+(n/1e3).toFixed(0)+'K';
+    return'$'+n.toLocaleString();
+  }
+  function fmtPct(n){return(n*100).toFixed(1)+'%';}
+
+  const PLAT_CLR={Facebook:'#4D8FF5',Instagram:'#E1306C',Twitter:'#1DA1F2'};
+  const PLAT_BADGE={Facebook:'b-fb',Instagram:'b-ig',Twitter:'b-tw'};
+  const TYPE_BADGE={Photo:'b-photo',Video:'b-video',Carousel:'b-carousel',Text:'b-text'};
+  const TEAM_COLORS=['#0093CE','#F5A623','#1CC8A0','#9B6EE8','#E04C55','#5BA4E8','#F0A060','#50C8A8','#B070E0','#E06070','#6090D0','#90B040'];
+
+  // ── Navigation ─────────────────────────────────────────────────────
+  const navItems=document.querySelectorAll('.nav-item[data-page]');
+  const pages=document.querySelectorAll('.page');
+  let chartsInited={};
+  let chartWeekly=null;
+
+  function showPage(id){
+    navItems.forEach(el=>{el.classList.toggle('active',el.dataset.page===id);});
+    pages.forEach(el=>{el.classList.toggle('active',el.id==='page-'+id);});
+    if(!chartsInited[id]){chartsInited[id]=true;initCharts(id);}
+  }
+  navItems.forEach(el=>{
+    el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);});
+  });
+
+  // ── Sidebar meta ───────────────────────────────────────────────────
+  document.getElementById('sb-month').textContent=D.meta.month;
+  document.getElementById('sb-updated').textContent='Updated '+D.meta.updated;
+
+  // ── OVERVIEW ───────────────────────────────────────────────────────
+  document.getElementById('ov-title').textContent=D.meta.month+' — '+D.meta.league+' Recap';
+  document.getElementById('ov-teams').textContent=D.kpis.teams;
+  document.getElementById('ov-posts').textContent=D.kpis.posts;
+  document.getElementById('ov-programs').textContent=D.programs.length;
+  document.getElementById('ov-impressions').textContent=fmtN(D.kpis.impressions);
+  document.getElementById('ov-engagements').textContent=fmtN(D.kpis.engagements);
+  document.getElementById('ov-social-value').textContent=fmtUSD(D.kpis.socialValue);
+  document.getElementById('ov-exposure').textContent=fmtUSD(D.kpis.exposureValue);
+
+  // Platform pills
+  const pp=document.getElementById('ov-plat-pills');
+  D.platforms.forEach(p=>{
+    const div=document.createElement('div');div.className='plat-pill';
+    div.innerHTML=`<div class="plat-dot" style="background:${PLAT_CLR[p.name]||'#888'}"></div>
+      <div>
+        <div class="plat-name">${p.name}</div>
+        <div class="plat-eng">${fmtN(p.engagements)}</div>
+        <div class="plat-meta">${fmtN(p.impressions)} imp · ${p.er.toFixed(1)}% ER · ${p.posts} posts</div>
+      </div>`;
+    pp.appendChild(div);
+  });
+
+  // ── TOP POSTS KPI ──────────────────────────────────────────────────
+  document.getElementById('tp-best').textContent=fmtN(D.topPosts[0].engagements);
+  document.getElementById('exp-total').textContent=fmtUSD(D.exposure.total);
+  document.getElementById('exp-clarity').textContent='92%';
+
+  // ── TEAM TABLE ─────────────────────────────────────────────────────
+  const tbody=document.getElementById('team-tbody');
+  D.teams.forEach((t,i)=>{
+    const er=(t.engagements/t.impressions*100).toFixed(2);
+    const rnkCls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="rank ${rnkCls}">${i+1}</td>
+      <td style="font-weight:700;">${t.name}</td>
+      <td class="dim">${t.posts}</td>
+      <td class="num">${fmtN(t.impressions)}</td>
+      <td class="num">${fmtN(t.engagements)}</td>
+      <td class="num">${fmtUSD(t.socialValue)}</td>
+      <td class="num" style="color:var(--invis-blue)">${fmtUSD(t.brandValue)}</td>
+      <td class="num" style="color:var(--purple)">${fmtUSD(t.exposure)}</td>
+      <td><span class="chip">${er}%</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // ── TEAM CARDS ─────────────────────────────────────────────────────
+  const maxBV=D.teams[0].brandValue;
+  const maxEng=Math.max(...D.teams.map(t=>t.engagements));
+  const tc=document.getElementById('team-cards');
+  D.teams.forEach((t,i)=>{
+    const card=document.createElement('div');card.className='team-card';
+    const bvPct=(t.brandValue/maxBV*100).toFixed(1);
+    const engPct=(t.engagements/maxEng*100).toFixed(1);
+    const er=(t.engagements/t.impressions*100).toFixed(2);
+    card.innerHTML=`<div class="tc-rank">#${i+1} of 12 teams</div>
+      <div class="tc-name">${t.name}</div>
+      <div class="tc-bar-row">
+        <span class="tc-bar-label">Brand Value</span>
+        <div class="tc-bar-track"><div class="tc-bar-fill" style="width:${bvPct}%"></div></div>
+        <span class="tc-bar-val" style="color:var(--invis-blue)">${fmtUSD(t.brandValue)}</span>
+      </div>
+      <div class="tc-bar-row">
+        <span class="tc-bar-label">Engagements</span>
+        <div class="tc-bar-track"><div class="tc-bar-fill gold" style="width:${engPct}%"></div></div>
+        <span class="tc-bar-val">${fmtN(t.engagements)}</span>
+      </div>
+      <div class="tc-meta">
+        <span class="tc-meta-item"><b>${t.posts}</b> posts</span>
+        <span class="tc-meta-item"><b>${fmtN(t.impressions)}</b> imp</span>
+        <span class="tc-meta-item"><b>${er}%</b> ER</span>
+      </div>`;
+    tc.appendChild(card);
+  });
+
+  // ── PROGRAM ROWS ───────────────────────────────────────────────────
+  const maxProgEng=D.programs[0].engagements;
+  const maxProgImp=D.programs[0].impressions;
+  const pr=document.getElementById('prog-rows');
+  D.programs.forEach(p=>{
+    const engPct=(p.engagements/maxProgEng*100).toFixed(1);
+    const row=document.createElement('div');row.className='prog-row';
+    row.innerHTML=`<span class="prog-name">${p.name}</span>
+      <span class="dim">${p.posts}</span>
+      <span class="prog-num">${fmtN(p.impressions)}</span>
+      <div class="prog-bar-cell"><div class="prog-bar" style="width:${Math.max(4,engPct*1.2)}px"></div><span class="prog-num">${fmtN(p.engagements)}</span></div>
+      <span class="prog-num" style="color:var(--green)">${fmtUSD(p.socialValue)}</span>
+      <span class="prog-num" style="color:var(--invis-blue)">${fmtUSD(p.brandValue)}</span>`;
+    pr.appendChild(row);
+  });
+
+  // ── ASSET CARDS ────────────────────────────────────────────────────
+  const ac=document.getElementById('asset-cards');
+  const assetIcons={'Digital Overlay':'🔲','Text Mention':'💬','Videoboard':'📺','LED Ribbonboard':'💡','Media Backdrop':'🖼','Stadium Signage':'📋'};
+  D.exposure.byAsset.forEach(a=>{
+    const card=document.createElement('div');card.className='asset-card';
+    const barW=Math.max(4,a.pct);
+    card.innerHTML=`<div class="ac-icon">${assetIcons[a.name]||'📌'}</div>
+      <span class="asset-badge ${a.cls}">${a.name}</span>
+      <div style="margin-top:10px;">
+        <div class="ac-lbl">Exposure Value</div>
+        <div class="ac-val">${fmtUSD(a.value)}</div>
+      </div>
+      <div class="ac-det">${a.detections} detections · ${a.pct.toFixed(1)}% of total</div>
+      ${a.clarity!=null?`<div class="ac-det" style="margin-top:3px;">Avg clarity: ${(a.clarity*100).toFixed(0)}%</div>`:''}
+      <div class="ac-bar" style="width:${barW}%;background:${a.pct>50?'var(--invis-blue)':a.pct>5?'var(--gold)':'var(--border-light)'}"></div>`;
+    ac.appendChild(card);
+  });
+
+  // ── EXPOSURE TEAM BARS ─────────────────────────────────────────────
+  const etb=document.getElementById('exp-team-bars');
+  const maxExp=D.exposure.byTeam[0].value;
+  D.exposure.byTeam.forEach(t=>{
+    const pct=(t.value/maxExp*100).toFixed(1);
+    const clarityPct=t.clarity!=null?(t.clarity*100).toFixed(0):null;
+    const div=document.createElement('div');div.className='exp-bar-row';
+    div.innerHTML=`<div class="exp-bar-header">
+        <span class="exp-bar-name">${t.name}</span>
+        <span class="exp-bar-val">${fmtUSD(t.value)}</span>
+      </div>
+      <div class="exp-bar-track"><div class="exp-bar-fill" style="width:${pct}%"></div></div>
+      <div class="exp-bar-meta">${t.detections} detections${clarityPct!=null?' · '+clarityPct+'% logo clarity':''}</div>`;
+    etb.appendChild(div);
+  });
+
+  // ── TOP POSTS TABLE ────────────────────────────────────────────────
+  const ttb=document.getElementById('top-tbody');
+  D.topPosts.forEach((p,i)=>{
+    const rnkCls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="rank ${rnkCls}">${i+1}</td>
+      <td><span class="badge ${PLAT_BADGE[p.platform]||''}">${p.platform}</span></td>
+      <td style="font-weight:600;font-size:12px;">${p.team.replace(' ','\u00a0')}</td>
+      <td><span class="badge b-program" style="white-space:nowrap;">${p.program}</span></td>
+      <td><span class="badge ${TYPE_BADGE[p.type]||''}">${p.type}</span></td>
+      <td class="msg-cell">${p.msg}</td>
+      <td class="num" style="color:var(--invis-blue)">${fmtD(p.engagements)}</td>
+      <td class="num dim">${fmtN(p.impressions)}</td>
+      <td class="num" style="color:var(--green)">${fmtUSD(p.socialValue)}</td>
+      <td><span class="chip ${p.er>=8?'green':''}">${p.er.toFixed(2)}%</span></td>`;
+    ttb.appendChild(tr);
+  });
+
+  // ══════════════════════════════════════════════════════════════════
+  // CHARTS — lazy init per page
+  // ══════════════════════════════════════════════════════════════════
+  function initCharts(page){
+    if(page==='overview'){
+      // Weekly line
+      chartWeekly=new Chart(document.getElementById('chart-weekly'),{
+        type:'line',
+        data:{
+          labels:D.weekly.labels,
+          datasets:[
+            {label:'Engagements',data:D.weekly.engagements,borderColor:'#0093CE',backgroundColor:'rgba(0,147,206,0.08)',fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:'#0093CE',yAxisID:'y'},
+            {label:'Impressions',data:D.weekly.impressions,borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.06)',fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:'#F5A623',yAxisID:'y1'}
+          ]
+        },
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{labels:{color:TICK,boxWidth:12}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtN(ctx.raw)}}},
+          scales:{
+            x:{ticks:{color:TICK},grid:{color:GRID}},
+            y:{type:'linear',position:'left',ticks:{color:'#0093CE',callback:fmtN},grid:{color:GRID},title:{display:true,text:'Engagements',color:'#0093CE',font:{size:11}}},
+            y1:{type:'linear',position:'right',ticks:{color:'#F5A623',callback:fmtN},grid:{drawOnChartArea:false},title:{display:true,text:'Impressions',color:'#F5A623',font:{size:11}}}
+          }
+        }
+      });
+
+      // Top teams bar
+      const top5=D.teams.slice(0,5);
+      new Chart(document.getElementById('chart-top-teams'),{
+        type:'bar',
+        data:{
+          labels:top5.map(t=>t.name.replace('Green Bay ','GB ').replace('New England ','NE ').replace('New Orleans ','NO ').replace('New York ','NY ').replace('Tampa Bay ','TB ').replace('Los Angeles ','LA ')),
+          datasets:[
+            {label:'Brand Value',data:top5.map(t=>t.brandValue),backgroundColor:'#0093CE',borderRadius:5},
+            {label:'Social Value',data:top5.map(t=>t.socialValue),backgroundColor:'rgba(245,166,35,0.7)',borderRadius:5}
+          ]
+        },
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{labels:{color:TICK,boxWidth:12}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtUSD(ctx.raw)}}},
+          scales:{x:{ticks:{color:TICK},grid:{color:GRID}},y:{ticks:{color:TICK,callback:v=>'$'+(v>=1000?Math.round(v/1000)+'K':v)},grid:{color:GRID}}}
+        }
+      });
+
+      // Platform posts donut
+      new Chart(document.getElementById('chart-plat-posts'),{
+        type:'doughnut',
+        data:{
+          labels:D.platforms.map(p=>p.name+' ('+p.posts+')'),
+          datasets:[{data:D.platforms.map(p=>p.posts),backgroundColor:D.platforms.map(p=>PLAT_CLR[p.name]),borderColor:'#0C1928',borderWidth:3,hoverOffset:6}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+          plugins:{legend:{position:'right',labels:{color:TICK,padding:14,boxWidth:12,font:{size:11}}},
+          tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+ctx.raw+' posts'}}}
+        }
+      });
+
+      // Platform engagements donut
+      new Chart(document.getElementById('chart-plat-eng'),{
+        type:'doughnut',
+        data:{
+          labels:D.platforms.map(p=>p.name+' ('+fmtN(p.engagements)+')'),
+          datasets:[{data:D.platforms.map(p=>p.engagements),backgroundColor:D.platforms.map(p=>PLAT_CLR[p.name]),borderColor:'#0C1928',borderWidth:3,hoverOffset:6}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+          plugins:{legend:{position:'right',labels:{color:TICK,padding:14,boxWidth:12,font:{size:11}}},
+          tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+fmtN(ctx.raw)}}}
+        }
+      });
+    }
+
+    if(page==='teams'){
+      const labels=D.teams.map(t=>t.name.replace('Green Bay ','GB ').replace('New England ','NE ').replace('New Orleans ','NO ').replace('New York ','NY ').replace('Tampa Bay ','TB ').replace('Los Angeles ','LA '));
+      new Chart(document.getElementById('chart-teams-bar'),{
+        type:'bar',
+        data:{
+          labels,
+          datasets:[
+            {label:'Brand Value ($)',data:D.teams.map(t=>t.brandValue),backgroundColor:'#0093CE',borderRadius:4,yAxisID:'y'},
+            {label:'Engagements',data:D.teams.map(t=>t.engagements),backgroundColor:'rgba(245,166,35,0.75)',borderRadius:4,yAxisID:'y1'}
+          ]
+        },
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{labels:{color:TICK,boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label.includes('$')?' '+ctx.dataset.label+': '+fmtUSD(ctx.raw):' '+ctx.dataset.label+': '+fmtN(ctx.raw)}}},
+          scales:{
+            x:{ticks:{color:TICK,maxRotation:40},grid:{color:GRID}},
+            y:{type:'linear',position:'left',ticks:{color:'#0093CE',callback:v=>'$'+(v>=1000?Math.round(v/1000)+'K':v)},grid:{color:GRID}},
+            y1:{type:'linear',position:'right',ticks:{color:'#F5A623',callback:fmtN},grid:{drawOnChartArea:false}}
+          }
+        }
+      });
+    }
+
+    if(page==='programs'){
+      const labels=D.programs.map(p=>p.name.length>20?p.name.slice(0,20)+'…':p.name);
+      new Chart(document.getElementById('chart-prog-eng'),{
+        type:'bar',
+        data:{labels,datasets:[{label:'Engagements',data:D.programs.map(p=>p.engagements),backgroundColor:D.programs.map((_,i)=>TEAM_COLORS[i%TEAM_COLORS.length]),borderRadius:5}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)}}},
+          scales:{x:{ticks:{color:TICK,callback:fmtN},grid:{color:GRID}},y:{ticks:{color:TICK},grid:{color:GRID}}}
+        }
+      });
+      new Chart(document.getElementById('chart-prog-imp'),{
+        type:'bar',
+        data:{labels,datasets:[{label:'Impressions',data:D.programs.map(p=>p.impressions),backgroundColor:D.programs.map((_,i)=>TEAM_COLORS[i%TEAM_COLORS.length]+'BB'),borderRadius:5}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)}}},
+          scales:{x:{ticks:{color:TICK,callback:fmtN},grid:{color:GRID}},y:{ticks:{color:TICK},grid:{color:GRID}}}
+        }
+      });
+      const erData=D.programs.map(p=>p.impressions>0?(p.engagements/p.impressions*100):0);
+      new Chart(document.getElementById('chart-prog-er'),{
+        type:'bar',
+        data:{labels,datasets:[{label:'ER %',data:erData,backgroundColor:'#0093CE',borderRadius:5}]},
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' ER: '+ctx.raw.toFixed(2)+'%'}}},
+          scales:{x:{ticks:{color:TICK,maxRotation:30},grid:{color:GRID}},y:{ticks:{color:TICK,callback:v=>v.toFixed(1)+'%'},grid:{color:GRID}}}
+        }
+      });
+    }
+
+    if(page==='exposure'){
+      // Horizontal bar by team
+      const et=D.exposure.byTeam;
+      new Chart(document.getElementById('chart-exp-team'),{
+        type:'bar',
+        data:{
+          labels:et.map(t=>t.name.replace('Green Bay ','GB ').replace('New England ','NE ').replace('New Orleans ','NO ').replace('New York ','NY ').replace('Tampa Bay ','TB ').replace('Los Angeles ','LA ')),
+          datasets:[{label:'Exposure Value',data:et.map(t=>t.value),backgroundColor:et.map((_,i)=>TEAM_COLORS[i%TEAM_COLORS.length]),borderRadius:5}]
+        },
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)}}},
+          scales:{x:{ticks:{color:TICK,callback:v=>'$'+(v>=1000?Math.round(v/1000)+'K':v)},grid:{color:GRID}},y:{ticks:{color:TICK},grid:{color:GRID}}}
+        }
+      });
+      // Donut
+      new Chart(document.getElementById('chart-exp-donut'),{
+        type:'doughnut',
+        data:{
+          labels:et.slice(0,6).map(t=>t.name.replace('Green Bay ','GB ').replace('New England ','NE ').replace('New Orleans ','NO ')),
+          datasets:[{data:et.slice(0,6).map(t=>t.value),backgroundColor:TEAM_COLORS.slice(0,6),borderColor:'#0C1928',borderWidth:3,hoverOffset:6}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+          plugins:{legend:{position:'bottom',labels:{color:TICK,padding:12,boxWidth:10,font:{size:10}}},
+          tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)}}}
+        }
+      });
+    }
+
+    if(page==='posts'){
+      const tp=D.topPosts;
+      new Chart(document.getElementById('chart-top-posts'),{
+        type:'bar',
+        data:{
+          labels:tp.map(p=>p.program.length>18?p.program.slice(0,18)+'…':p.program),
+          datasets:[{label:'Engagements',data:tp.map(p=>p.engagements),backgroundColor:tp.map(p=>PLAT_CLR[p.platform]||'#666'),borderRadius:5}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtD(ctx.raw)+' engagements'}}},
+          scales:{x:{ticks:{color:TICK,maxRotation:35},grid:{color:GRID}},y:{ticks:{color:TICK,callback:fmtN},grid:{color:GRID}}}
+        }
+      });
+    }
+  }
+
+  // Init overview charts immediately (it's the default page)
+  chartsInited['overview']=true;
+  initCharts('overview');
+
+  const invStart=document.getElementById('inv-filter-start');
+  const invEnd=document.getElementById('inv-filter-end');
+  invStart.value='2025-12-01';
+  invEnd.value='2025-12-31';
+  function applyInvWeeklyFilter(){
+    if(!chartWeekly)return;
+    let s=parseISODate(invStart.value),e=parseISODate(invEnd.value);
+    if(!s||!e)return;
+    if(s>e){const t=s;s=e;e=t;invStart.value=isoFromDate(s);invEnd.value=isoFromDate(e);}
+    const idx=[];
+    for(let i=0;i<INV_WEEK_RANGES.length;i++){
+      const r=INV_WEEK_RANGES[i];
+      if(rangesOverlap(s,e,parseISODate(r.start),parseISODate(r.end)))idx.push(i);
+    }
+    if(idx.length===0){
+      chartWeekly.data.labels=['No data in range'];
+      chartWeekly.data.datasets[0].data=[null];
+      chartWeekly.data.datasets[1].data=[null];
+    }else{
+      chartWeekly.data.labels=idx.map(i=>D.weekly.labels[i]);
+      chartWeekly.data.datasets[0].data=idx.map(i=>D.weekly.engagements[i]);
+      chartWeekly.data.datasets[1].data=idx.map(i=>D.weekly.impressions[i]);
+    }
+    chartWeekly.update();
+  }
+  invStart.addEventListener('change',applyInvWeeklyFilter);
+  invEnd.addEventListener('change',applyInvWeeklyFilter);
+  invStart.addEventListener('input',applyInvWeeklyFilter);
+  invEnd.addEventListener('input',applyInvWeeklyFilter);
+
+})();
+</script>
+</body>
+</html>
