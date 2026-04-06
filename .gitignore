@@ -1,3 +1,7 @@
 .DS_Store
 .claude/
 .vscode/
+
+# Optional local copies; GitHub Pages uses docs/
+/invisalign-nfl-dashboard/
+/nba-prime-dashboard/

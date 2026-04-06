@@ -71,62 +71,50 @@ body {
   margin-top: 2px;
 }
 .header-right {
-  text-align: right;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
-.date-filter {
-  display: flex;
+.date-range-pill {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-top: 2px solid var(--prime-teal);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.28), 0 0 32px var(--prime-glow);
 }
-.date-filter label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-}
-.date-filter input[type="date"] {
+.date-range-pill input[type="date"] {
+  flex: 1;
+  min-width: 0;
+  max-width: 132px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-primary);
-  background: var(--bg-elevated);
-  border: 1px solid var(--bg-border);
-  border-radius: 8px;
-  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  padding: 2px 0;
   color-scheme: dark;
 }
-.date-filter input[type="date"]:focus {
-  outline: none;
-  border-color: var(--prime-teal);
-  box-shadow: 0 0 0 2px var(--prime-glow);
+.date-range-pill input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: opacity(0.75);
+  cursor: pointer;
 }
-.date-filter-sep {
+.date-range-pill input[type="date"]:focus {
+  outline: none;
+}
+.date-range-dash {
   color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
-}
-.game-date-badge {
-  display: inline-block;
-  background: var(--bg-elevated);
-  border: 1px solid var(--bg-border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--prime-teal);
-  letter-spacing: 0.5px;
-}
-.last-updated {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 5px;
+  flex-shrink: 0;
+  user-select: none;
+  opacity: 0.7;
 }
 
 /* ── LAYOUT ─────────────────────────────────────────────────────────── */
@@ -457,8 +445,8 @@ tbody tr:hover td { background: rgba(255,255,255,0.025); transition: background 
   .kpi-row         { grid-template-columns: 1fr; }
   .comp-row        { grid-template-columns: 1fr; }
   .header          { flex-direction: column; align-items: flex-start; }
-  .header-right    { align-items: flex-start; width: 100%; }
-  .date-filter     { justify-content: flex-start; }
+  .header-right    { width: 100%; justify-content: flex-start; }
+  .date-range-pill { flex-wrap: wrap; max-width: 100%; }
   .dashboard       { padding: 16px; }
 }
 </style>
@@ -550,15 +538,11 @@ window.NBA_DASHBOARD_DATA = {
     </div>
   </div>
   <div class="header-right">
-    <div class="date-filter" role="group" aria-label="Filter by date range">
-      <label for="filter-start">From</label>
-      <input type="date" id="filter-start" />
-      <span class="date-filter-sep" aria-hidden="true">–</span>
-      <label for="filter-end">To</label>
-      <input type="date" id="filter-end" />
+    <div class="date-range-pill" role="group" aria-label="Filter by date range">
+      <input type="date" id="filter-start" aria-label="From date" />
+      <span class="date-range-dash" aria-hidden="true">–</span>
+      <input type="date" id="filter-end" aria-label="To date" />
     </div>
-    <div class="game-date-badge" id="hdr-date"></div>
-    <div class="last-updated" id="hdr-updated"></div>
   </div>
 </header>
 
@@ -716,11 +700,6 @@ window.NBA_DASHBOARD_DATA = {
     const p = s.split('-');
     return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
   }
-  function formatRangeShort(d0, d1) {
-    const opts = { month: 'short', day: 'numeric', year: 'numeric' };
-    return d0.toLocaleDateString(undefined, opts) + ' – ' + d1.toLocaleDateString(undefined, opts);
-  }
-
   // ── Helpers ──────────────────────────────────────────────────────────
   function fmtNum(n) {
     if (n == null) return '—';
@@ -774,18 +753,6 @@ window.NBA_DASHBOARD_DATA = {
   elEnd.value = isoFromDate(rangeEnd);
 
   document.getElementById('hdr-title').textContent = D.meta.reportTitle;
-  document.getElementById('hdr-updated').textContent = 'Updated ' + D.meta.lastUpdated;
-
-  function updateHdrDateBadge() {
-    const s = parseISODate(elStart.value);
-    const e = parseISODate(elEnd.value);
-    if (!s || !e) {
-      document.getElementById('hdr-date').textContent = D.meta.gameDate;
-      return;
-    }
-    document.getElementById('hdr-date').textContent = formatRangeShort(s, e);
-  }
-  updateHdrDateBadge();
 
   let chartWow;
   function applyWowFilter() {
@@ -813,7 +780,6 @@ window.NBA_DASHBOARD_DATA = {
       chartWow.data.datasets[1].data = idx.map(function (i) { return wData.impressions[i]; });
     }
     chartWow.update();
-    updateHdrDateBadge();
   }
   elStart.addEventListener('change', applyWowFilter);
   elEnd.addEventListener('change', applyWowFilter);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invisalign NFL Sponsorship Report — December 2025</title>
+<title>Invisalign NFL Sponsorship — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════
@@ -87,17 +87,39 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
 }
 .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
 
-.sidebar-footer{
-  margin-top:auto;padding:16px 18px;
-  border-top:1px solid var(--border);
+/* Date range — one control top-right (from ↔ to) */
+.content-toolbar{
+  position:sticky;top:0;z-index:15;
+  display:flex;justify-content:flex-end;align-items:center;
+  padding:10px 28px 12px;
+  margin:0;
+  background:linear-gradient(to bottom,var(--bg) 92%,transparent);
 }
-.report-badge{
-  background:var(--elevated);border:1px solid var(--border);
-  border-radius:8px;padding:10px 12px;
+.date-range-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:2px solid var(--invis-blue);
+  border-radius:10px;
+  padding:8px 12px;
+  box-shadow:0 2px 14px rgba(0,0,0,.28),0 0 28px var(--invis-glow);
 }
-.rb-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-3);}
-.rb-month{font-size:13px;font-weight:700;color:var(--invis-blue);margin-top:2px;}
-.rb-updated{font-size:10px;color:var(--txt-3);margin-top:3px;}
+.date-range-pill input[type="date"]{
+  flex:1;min-width:0;max-width:132px;
+  font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--txt);
+  background:transparent;border:none;
+  padding:2px 0;color-scheme:dark;
+}
+.date-range-pill input[type="date"]::-webkit-calendar-picker-indicator{
+  filter:opacity(.75);cursor:pointer;
+}
+.date-range-pill input[type="date"]:focus{outline:none;}
+.date-range-dash{
+  color:var(--txt-3);font-size:13px;font-weight:600;flex-shrink:0;
+  user-select:none;
+  opacity:.7;
+}
 
 /* ═══════════════════════════════════════════════
    CONTENT AREA
@@ -105,28 +127,6 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
 .content{flex:1;overflow-y:auto;height:100vh;}
 .page{display:none;padding:28px 28px 48px;min-height:100%;}
 .page.active{display:block;}
-
-.content-toolbar{
-  position:sticky;top:0;z-index:15;
-  display:flex;justify-content:flex-end;align-items:center;
-  padding:12px 0 8px;margin:-8px 0 4px;
-  background:linear-gradient(to bottom,var(--bg) 88%,transparent);
-}
-.date-filter{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
-}
-.date-filter label{
-  font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt-3);
-}
-.date-filter input[type="date"]{
-  font-family:inherit;font-size:12px;font-weight:600;color:var(--txt);
-  background:var(--elevated);border:1px solid var(--border);
-  border-radius:8px;padding:6px 10px;color-scheme:dark;
-}
-.date-filter input[type="date"]:focus{
-  outline:none;border-color:var(--invis-blue);box-shadow:0 0 0 2px var(--invis-glow);
-}
-.date-filter-sep{color:var(--txt-3);font-size:13px;font-weight:600;}
 
 /* Page header */
 .page-header{margin-bottom:24px;}
@@ -385,9 +385,11 @@ tbody tr:hover td{background:rgba(255,255,255,.025);transition:background .12s;}
 }
 @media(max-width:780px){
   :root{--sidebar-w:60px;}
-  .brand-name,.brand-sub,.nav-label,.nav-item span,.sidebar-footer{display:none;}
+  .brand-name,.brand-sub,.nav-label,.nav-item span{display:none;}
   .nav-item{justify-content:center;padding:12px;}
   .nav-icon{width:auto;}
+  .content-toolbar{padding:8px 16px 10px;}
+  .date-range-pill{flex-wrap:wrap;justify-content:flex-end;max-width:100%;}
   .team-grid{grid-template-columns:1fr;}
   .asset-cards{grid-template-columns:1fr 1fr;}
   .page{padding:16px;}
@@ -505,7 +507,6 @@ window.INV = {
     <div class="sidebar-brand">
       <div class="brand-pill">Invisalign</div>
       <div class="brand-name">NFL Sponsorship</div>
-      <div class="brand-sub">Monthly Performance Report</div>
     </div>
 
     <div class="nav-section">
@@ -526,26 +527,16 @@ window.INV = {
         <span class="nav-icon">⭐</span><span>Top Posts</span>
       </a>
     </div>
-
-    <div class="sidebar-footer">
-      <div class="report-badge">
-        <div class="rb-label">Report Period</div>
-        <div class="rb-month" id="sb-month"></div>
-        <div class="rb-updated" id="sb-updated"></div>
-      </div>
-    </div>
   </nav>
 
   <!-- CONTENT -->
   <div class="content">
 
     <div class="content-toolbar">
-      <div class="date-filter" role="group" aria-label="Filter weekly trends by date range">
-        <label for="inv-filter-start">From</label>
-        <input type="date" id="inv-filter-start" />
-        <span class="date-filter-sep" aria-hidden="true">–</span>
-        <label for="inv-filter-end">To</label>
-        <input type="date" id="inv-filter-end" />
+      <div class="date-range-pill" role="group" aria-label="Filter by date range">
+        <input type="date" id="inv-filter-start" aria-label="From date" />
+        <span class="date-range-dash" aria-hidden="true">–</span>
+        <input type="date" id="inv-filter-end" aria-label="To date" />
       </div>
     </div>
 
@@ -607,11 +598,11 @@ window.INV = {
       </div>
 
       <div class="gap">
-        <div class="slabel">Monthly Activity Trends</div>
+        <div class="slabel">Activity trends</div>
         <div class="g2">
           <div class="chart-card">
             <div class="ct">Weekly Engagements &amp; Impressions</div>
-            <div class="cs">December 2025 — dual axis</div>
+            <div class="cs">Engagements &amp; impressions — dual axis</div>
             <div class="cw cw-260"><canvas id="chart-weekly"></canvas></div>
           </div>
           <div class="chart-card">
@@ -645,7 +636,7 @@ window.INV = {
     <div id="page-teams" class="page">
       <div class="page-header">
         <div class="page-title">Team Performance</div>
-        <div class="page-sub">All 12 Invisalign NFL partner teams — December 2025</div>
+        <div class="page-sub">All 12 Invisalign NFL partner teams</div>
       </div>
 
       <div class="gap">
@@ -743,7 +734,7 @@ window.INV = {
     <div id="page-exposure" class="page">
       <div class="page-header">
         <div class="page-title">Brand Exposure</div>
-        <div class="page-sub">AI logo detection across all NFL team posts — December 2025</div>
+        <div class="page-sub">AI logo detection across all NFL team posts</div>
       </div>
 
       <div class="gap">
@@ -805,7 +796,7 @@ window.INV = {
     <div id="page-posts" class="page">
       <div class="page-header">
         <div class="page-title">Top 10 Posts</div>
-        <div class="page-sub">Highest-engagement Invisalign-branded posts — December 2025</div>
+        <div class="page-sub">Highest-engagement Invisalign-branded posts</div>
       </div>
 
       <div class="gap">
@@ -944,12 +935,8 @@ window.INV = {
     el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);});
   });
 
-  // ── Sidebar meta ───────────────────────────────────────────────────
-  document.getElementById('sb-month').textContent=D.meta.month;
-  document.getElementById('sb-updated').textContent='Updated '+D.meta.updated;
-
   // ── OVERVIEW ───────────────────────────────────────────────────────
-  document.getElementById('ov-title').textContent=D.meta.month+' — '+D.meta.league+' Recap';
+  document.getElementById('ov-title').textContent=D.meta.league+' Sponsorship Recap';
   document.getElementById('ov-teams').textContent=D.kpis.teams;
   document.getElementById('ov-posts').textContent=D.kpis.posts;
   document.getElementById('ov-programs').textContent=D.programs.length;
