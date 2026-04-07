@@ -1,6 +1,6 @@
 # Powerpoint Generator — static dashboards
 
-Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
+Self-contained HTML dashboards (Chart.js + embedded JSON). No build step — **NBA on Prime**, **Invisalign NFL**, and **Portland Thorns FC**.
 
 **Repository:** [github.com/NickCroninZoomph/dashboard-examples](https://github.com/NickCroninZoomph/dashboard-examples)
 
@@ -31,6 +31,7 @@ Two self-contained HTML dashboards (Chart.js + embedded JSON). No build step.
    - **Home:** https://nickcroninzoomph.github.io/dashboard-examples/
    - **NBA:** https://nickcroninzoomph.github.io/dashboard-examples/nba-prime-dashboard/
    - **Invisalign:** https://nickcroninzoomph.github.io/dashboard-examples/invisalign-nfl-dashboard/
+   - **Thorns:** https://nickcroninzoomph.github.io/dashboard-examples/thorns-dashboard/
 
 If you still see 404, the Pages source is almost always still wrong — double-check it says **`main`** and **`/docs`**, not **`/ (root)`** on `main`.
 
@@ -40,5 +41,6 @@ Edit the JSON inside:
 
 - `docs/nba-prime-dashboard/index.html` (`window.NBA_DASHBOARD_DATA`)
 - `docs/invisalign-nfl-dashboard/index.html` (`window.INV`)
+- `docs/thorns-dashboard/index.html` (`window.THORNS_DASHBOARD_DATA`)
 
 Then commit and push `main`.
