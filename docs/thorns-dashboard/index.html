@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portland Thorns — Social Snapshot</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-page: #0a0c10;
+  --bg-surface: #12151c;
+  --bg-elevated: #1a1f28;
+  --bg-border: #2a3140;
+  --thorns-red: #c8102e;
+  --thorns-red-dim: #9a0c24;
+  --thorns-glow: rgba(200, 16, 46, 0.12);
+  --green: #1fa37a;
+  --text-primary: #eef2f7;
+  --text-secondary: #8a96a8;
+  --text-muted: #4a5568;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.header {
+  background: linear-gradient(135deg, #1a0508 0%, #0a0c10 55%, var(--bg-page) 100%);
+  border-bottom: 1px solid var(--bg-border);
+  padding: 22px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.thorns-badge {
+  background: var(--thorns-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.header-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.header-right { display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+.date-range-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-top: 2px solid var(--thorns-red);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.28), 0 0 28px var(--thorns-glow);
+}
+.date-range-pill input[type="date"] {
+  flex: 1;
+  min-width: 0;
+  max-width: 132px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+  color-scheme: dark;
+}
+.date-range-pill input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: opacity(0.75);
+  cursor: pointer;
+}
+.date-range-dash {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.dashboard { max-width: 1100px; margin: 0 auto; padding: 28px 28px 48px; }
+.section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--thorns-red);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--bg-border);
+}
+.section-gap { margin-bottom: 28px; }
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-top: 3px solid var(--thorns-red);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), 0 0 32px var(--thorns-glow);
+}
+.kpi-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+.kpi-value.accent { color: var(--thorns-red); }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: 12px;
+  padding: 22px 24px;
+}
+.chart-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.chart-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 18px; }
+.chart-wrap { position: relative; height: 260px; }
+@media (max-width: 900px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .header { flex-direction: column; align-items: flex-start; }
+  .header-right { width: 100%; justify-content: flex-start; }
+  .kpi-row { grid-template-columns: 1fr; }
+  .dashboard { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<script>
+window.THORNS_DASHBOARD_DATA = {
+  meta: {
+    reportTitle: "Portland Thorns FC",
+    reportYear: 2026,
+    lastUpdated: "April 6, 2026",
+  },
+  kpi: {
+    totalEngagements: 1842093,
+    totalImpressions: 45200000,
+    videoViews: 892000,
+    avgEngagementRate: 4.08,
+  },
+  weekly: {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    engagements: [412000, 445000, 478000, 509093],
+    impressions: [10200000, 11000000, 11800000, 12200000],
+  },
+};
+</script>
+
+<header class="header">
+  <div class="header-left">
+    <div class="thorns-badge">NWSL</div>
+    <div>
+      <h1 id="hdr-title">Portland Thorns FC</h1>
+      <div class="header-sub">Social performance snapshot</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date-range-pill" role="group" aria-label="Date range">
+      <input type="date" id="filter-start" aria-label="From date" />
+      <span class="date-range-dash" aria-hidden="true">–</span>
+      <input type="date" id="filter-end" aria-label="To date" />
+    </div>
+  </div>
+</header>
+
+<main class="dashboard">
+  <div class="section-gap">
+    <div class="section-label">At a glance</div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total engagements</div>
+        <div class="kpi-value accent" id="kpi-eng"></div>
+        <div class="kpi-sub">Likes, comments, shares</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Impressions</div>
+        <div class="kpi-value" id="kpi-imp"></div>
+        <div class="kpi-sub">Estimated reach</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Video views</div>
+        <div class="kpi-value" id="kpi-vid"></div>
+        <div class="kpi-sub">Short-form &amp; long-form</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg engagement rate</div>
+        <div class="kpi-value" id="kpi-er"></div>
+        <div class="kpi-sub">Post-weighted</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-gap">
+    <div class="section-label">Trend</div>
+    <div class="card">
+      <div class="chart-title">Engagements &amp; impressions</div>
+      <div class="chart-sub">Sample weekly series — replace with live data</div>
+      <div class="chart-wrap"><canvas id="chart-weekly"></canvas></div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  const D = window.THORNS_DASHBOARD_DATA;
+  function fmtNum(n) {
+    if (n == null) return "—";
+    if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+    return n.toLocaleString();
+  }
+  function fmtPct(n) {
+    return n.toFixed(2) + "%";
+  }
+  function parseISODate(s) {
+    if (!s) return null;
+    const p = s.split("-");
+    return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+  }
+  function isoFromDate(d) {
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + mo + "-" + day;
+  }
+
+  document.getElementById("hdr-title").textContent = D.meta.reportTitle;
+
+  document.getElementById("kpi-eng").textContent = fmtNum(D.kpi.totalEngagements);
+  document.getElementById("kpi-imp").textContent = fmtNum(D.kpi.totalImpressions);
+  document.getElementById("kpi-vid").textContent = fmtNum(D.kpi.videoViews);
+  document.getElementById("kpi-er").textContent = fmtPct(D.kpi.avgEngagementRate);
+
+  const w = D.weekly;
+  const elStart = document.getElementById("filter-start");
+  const elEnd = document.getElementById("filter-end");
+  elStart.value = "2026-03-01";
+  elEnd.value = "2026-03-31";
+
+  Chart.defaults.color = "#8a96a8";
+  Chart.defaults.font.family =
+    "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
+  const gridColor = "#2a3140";
+  const tickColor = "#8a96a8";
+
+  const chartWeekly = new Chart(document.getElementById("chart-weekly"), {
+    type: "line",
+    data: {
+      labels: w.labels.slice(),
+      datasets: [
+        {
+          label: "Engagements",
+          data: w.engagements.slice(),
+          borderColor: "#c8102e",
+          backgroundColor: "rgba(200, 16, 46, 0.08)",
+          fill: true,
+          tension: 0.35,
+          pointRadius: 4,
+          yAxisID: "y",
+        },
+        {
+          label: "Impressions",
+          data: w.impressions.slice(),
+          borderColor: "#1fa37a",
+          backgroundColor: "rgba(31, 163, 122, 0.06)",
+          fill: true,
+          tension: 0.35,
+          pointRadius: 4,
+          yAxisID: "y1",
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tickColor, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              return " " + ctx.dataset.label + ": " + fmtNum(ctx.raw);
+            },
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: {
+          type: "linear",
+          position: "left",
+          ticks: { color: "#c8102e", callback: fmtNum },
+          grid: { color: gridColor },
+        },
+        y1: {
+          type: "linear",
+          position: "right",
+          ticks: { color: "#1fa37a", callback: fmtNum },
+          grid: { drawOnChartArea: false },
+        },
+      },
+    },
+  });
+
+  const weekStarts = w.labels.map(function (_, i) {
+    return new Date(2026, 2, 1 + i * 7);
+  });
+
+  function applyFilter() {
+    let s = parseISODate(elStart.value);
+    let e = parseISODate(elEnd.value);
+    if (!s || !e) return;
+    if (s > e) {
+      const t = s;
+      s = e;
+      e = t;
+      elStart.value = isoFromDate(s);
+      elEnd.value = isoFromDate(e);
+    }
+    const idx = [];
+    for (let i = 0; i < weekStarts.length; i++) {
+      const ws = weekStarts[i];
+      const we = new Date(ws);
+      we.setDate(we.getDate() + 6);
+      if (ws <= e && we >= s) idx.push(i);
+    }
+    if (idx.length === 0) {
+      chartWeekly.data.labels = ["No data in range"];
+      chartWeekly.data.datasets[0].data = [null];
+      chartWeekly.data.datasets[1].data = [null];
+    } else {
+      chartWeekly.data.labels = idx.map(function (i) {
+        return w.labels[i];
+      });
+      chartWeekly.data.datasets[0].data = idx.map(function (i) {
+        return w.engagements[i];
+      });
+      chartWeekly.data.datasets[1].data = idx.map(function (i) {
+        return w.impressions[i];
+      });
+    }
+    chartWeekly.update();
+  }
+
+  elStart.addEventListener("change", applyFilter);
+  elEnd.addEventListener("change", applyFilter);
+  elStart.addEventListener("input", applyFilter);
+  elEnd.addEventListener("input", applyFilter);
+})();
+</script>
+</body>
+</html>
