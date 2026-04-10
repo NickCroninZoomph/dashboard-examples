@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Portland Thorns — 2025 Sponsorship Report</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -76,6 +76,37 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
 .fb-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-3);}
 .fb-val{font-size:13px;font-weight:700;color:var(--rose);margin-top:2px;}
 .fb-sub{font-size:10px;color:var(--txt-3);margin-top:2px;}
+
+/* ── DATE RANGE (sticky top-right, matches Invisalign/NBA) ───────────── */
+.content-toolbar{
+  position:sticky;top:0;z-index:15;
+  display:flex;justify-content:flex-end;align-items:center;
+  padding:10px 28px 12px;margin:0;
+  background:linear-gradient(to bottom,var(--bg) 92%,transparent);
+}
+.date-range-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:2px solid var(--rose);
+  border-radius:10px;
+  padding:8px 12px;
+  box-shadow:0 2px 14px rgba(0,0,0,.28),0 0 28px var(--rose-glow);
+}
+.date-range-pill input[type="date"]{
+  flex:1;min-width:0;max-width:132px;
+  font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--txt);background:transparent;border:none;
+  padding:2px 0;color-scheme:dark;
+}
+.date-range-pill input[type="date"]::-webkit-calendar-picker-indicator{
+  filter:opacity(.75);cursor:pointer;
+}
+.date-range-pill input[type="date"]:focus{outline:none;}
+.date-range-dash{
+  color:var(--txt-3);font-size:13px;font-weight:600;flex-shrink:0;
+  user-select:none;opacity:.7;
+}
 
 /* ── CONTENT ─────────────────────────────── */
 .content{flex:1;overflow-y:auto;height:100vh;}
@@ -299,13 +330,34 @@ tbody tr:hover td{background:rgba(255,255,255,.02);}
   .obs-grid{grid-template-columns:1fr;}
   .mon-grid{grid-template-columns:repeat(2,1fr);}
 }
+@media(max-width:900px){
+  html,body{overflow-x:hidden;overflow-y:auto;height:auto;min-height:100%;-webkit-overflow-scrolling:touch;}
+  .shell{height:auto;min-height:100vh;min-height:100dvh;overflow:visible;}
+  .sidebar{height:auto;min-height:100vh;align-self:stretch;}
+  .content{height:auto;overflow:visible;padding-bottom:max(28px,env(safe-area-inset-bottom));}
+  .hero{flex-direction:column;align-items:stretch;}
+  .hero-stats{flex-wrap:wrap;justify-content:space-between;gap:12px;width:100%;}
+  .content-toolbar{padding:8px 16px 10px;padding-right:max(16px,env(safe-area-inset-right));}
+  .date-range-pill{flex-wrap:wrap;justify-content:flex-end;max-width:100%;}
+  .combined-rank-head{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
 @media(max-width:700px){
   :root{--sidebar-w:60px;}
   .brand-name,.brand-sub,.brand-season,.nav-lbl,.nav-item span,.sidebar-footer{display:none;}
   .nav-item{justify-content:center;padding:12px;}
-  .page{padding:14px;}
+  .page{padding:14px;padding-bottom:max(40px,env(safe-area-inset-bottom));}
   .partner-grid{grid-template-columns:1fr;}
   .insight-strip{grid-template-columns:1fr;}
+  #partners-split-list > div[style*="grid-template"]{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    padding:14px 16px!important;
+  }
+  #partners-split-list > div > div[style*="text-align:right"]{text-align:left!important;}
+}
+@media(max-width:520px){
+  .split-bc,.split-soc,.split-total{font-size:11px;min-width:0;}
+  .split-row{flex-wrap:wrap;gap:8px;}
 }
 </style>
 </head>
@@ -478,6 +530,14 @@ window.THORNS_DASHBOARD_DATA = window.T;
 
   <div class="content">
 
+    <div class="content-toolbar">
+      <div class="date-range-pill" role="group" aria-label="Filter monthly social trends by date range">
+        <input type="date" id="thorns-filter-start" aria-label="From date" />
+        <span class="date-range-dash" aria-hidden="true">–</span>
+        <input type="date" id="thorns-filter-end" aria-label="To date" />
+      </div>
+    </div>
+
     <!-- ══════════════ PAGE: OVERVIEW ══════════════ -->
     <div id="page-overview" class="page active">
 
@@ -529,7 +589,7 @@ window.THORNS_DASHBOARD_DATA = window.T;
       <div class="gap">
         <div class="slabel">Combined Partner Ranking &mdash; Broadcast + Social</div>
         <div class="card" style="padding:0 0 4px;">
-          <div style="padding:14px 22px 0;display:flex;gap:24px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--txt-3);">
+          <div class="combined-rank-head" style="padding:14px 22px 0;display:flex;gap:24px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--txt-3);">
             <span style="min-width:24px">#</span>
             <span style="flex:1">Partner</span>
             <span style="min-width:110px;text-align:right;color:var(--rose)">Broadcast</span>
@@ -857,6 +917,100 @@ window.THORNS_DASHBOARD_DATA = window.T;
   const PALETTE=['#C8102E','#F5A623','#1CC8A0','#4D8FF5','#9B6EE8','#E04C55','#F0A060','#50C8A8','#B070E0','#6090D0','#90B040','#E06070','#C88040','#70D0B0','#8080D0','#D08080','#80C0E0'];
   const NET_BADGE={ION:'b-ion',CBS:'b-cbs',ABC:'b-abc',ESPN:'b-espn',Fox:'b-fox','CBS Sports':'b-cbs','CBS Sports Network':'b-cbs','ABC/ESPN+':'b-abc',MSG:'b-other',MNT:'b-other'};
 
+  function parseISODate(s){ if(!s)return null; const x=new Date(s+'T12:00:00'); return isNaN(x.getTime())?null:x; }
+  function isoFromDate(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
+  const MONTH_I={Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11};
+  function filteredMonthly(s,e){
+    const y=2025;
+    const out={labels:[],posts:[],impressions:[],engagements:[]};
+    if(!s||!e)return out;
+    D.social.monthly.labels.forEach((lbl,i)=>{
+      const mo=MONTH_I[lbl];
+      if(!mo)return;
+      const ms=new Date(y,mo-1,1), me=new Date(y,mo,0);
+      if(me>=s && ms<=e){
+        out.labels.push(lbl);
+        out.posts.push(D.social.monthly.posts[i]);
+        out.impressions.push(D.social.monthly.impressions[i]);
+        out.engagements.push(D.social.monthly.engagements[i]);
+      }
+    });
+    return out;
+  }
+
+  let chartOvMonthly, chartSocPostsEng, chartSocEr, chartSocImp;
+  const elThStart=document.getElementById('thorns-filter-start');
+  const elThEnd=document.getElementById('thorns-filter-end');
+  elThStart.value='2025-03-01';
+  elThEnd.value='2025-11-30';
+
+  function refillMonGrid(m){
+    const mg=document.getElementById('mon-grid');
+    if(!mg)return;
+    mg.innerHTML='';
+    const monthNames={Mar:'March',Apr:'April',May:'May',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November'};
+    if(!m.labels.length){
+      const empty=document.createElement('div');
+      empty.className='mon-card';
+      empty.style.cssText='grid-column:1/-1;text-align:center;color:var(--txt-2);padding:20px;';
+      empty.textContent='No months in selected range';
+      mg.appendChild(empty);
+      return;
+    }
+    m.labels.forEach((lbl,i)=>{
+      const eng=m.engagements[i], imp=m.impressions[i], posts=m.posts[i];
+      const er=(eng/imp*100).toFixed(2);
+      const erNum=parseFloat(er);
+      const erColor=erNum>=6?'teal':erNum>=4?'gold':'rose';
+      const div=document.createElement('div'); div.className='mon-card';
+      div.innerHTML=`<div class="mon-label">${monthNames[lbl]||lbl} 2025</div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Impressions</span><span class="mon-stat-val" style="color:var(--gold)">${fmtN(imp)}</span></div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Engagements</span><span class="mon-stat-val" style="color:var(--rose)">${fmtN(eng)}</span></div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Posts</span><span class="mon-stat-val dim">${fmtN(posts)}</span></div>
+        <div class="mon-er"><span style="color:var(--txt-3);font-size:10px;text-transform:uppercase;letter-spacing:1px;">Eng. Rate  </span><span style="color:var(--${erColor});font-weight:800;">${er}%</span></div>`;
+      mg.appendChild(div);
+    });
+  }
+
+  function applyThornsDateFilter(){
+    let s=parseISODate(elThStart.value), e=parseISODate(elThEnd.value);
+    if(!s||!e)return;
+    if(s>e){ const t=s; s=e; e=t; elThStart.value=isoFromDate(s); elThEnd.value=isoFromDate(e); }
+    const m=filteredMonthly(s,e);
+    const labels=m.labels.length?m.labels:['No data'];
+    const eng=m.labels.length?m.engagements:[null];
+    const imp=m.labels.length?m.impressions:[null];
+    const posts=m.labels.length?m.posts:[null];
+    const erData=m.labels.length?m.engagements.map((x,i)=>m.impressions[i]?parseFloat((x/m.impressions[i]*100).toFixed(2)):0):[null];
+    if(chartOvMonthly){
+      chartOvMonthly.data.labels=labels;
+      chartOvMonthly.data.datasets[0].data=eng;
+      chartOvMonthly.data.datasets[1].data=imp;
+      chartOvMonthly.update();
+    }
+    if(chartSocPostsEng){
+      chartSocPostsEng.data.labels=labels;
+      chartSocPostsEng.data.datasets[0].data=posts;
+      chartSocPostsEng.data.datasets[1].data=eng;
+      chartSocPostsEng.update();
+    }
+    if(chartSocEr){
+      chartSocEr.data.labels=labels;
+      chartSocEr.data.datasets[0].data=erData;
+      chartSocEr.update();
+    }
+    if(chartSocImp){
+      chartSocImp.data.labels=labels;
+      chartSocImp.data.datasets[0].data=m.labels.length?m.impressions:[null];
+      chartSocImp.update();
+    }
+    if(inited.insights) refillMonGrid(m);
+  }
+  elThStart.addEventListener('change',applyThornsDateFilter);
+  elThEnd.addEventListener('change',applyThornsDateFilter);
+  elThStart.addEventListener('input',applyThornsDateFilter);
+  elThEnd.addEventListener('input',applyThornsDateFilter);
+
   // ── NAV ───────────────────────────────────────────────
   const navItems = document.querySelectorAll('.nav-item[data-page]');
   const pages = document.querySelectorAll('.page');
@@ -930,14 +1084,18 @@ window.THORNS_DASHBOARD_DATA = window.T;
       cl.appendChild(div);
     });
 
-    // monthly dual axis
-    new Chart(document.getElementById('chart-ov-monthly'),{
+    // monthly dual axis (follows date range pill)
+    const mOv=filteredMonthly(parseISODate(elThStart.value),parseISODate(elThEnd.value));
+    const labOv=mOv.labels.length?mOv.labels:['No data'];
+    const engOv=mOv.labels.length?mOv.engagements:[null];
+    const impOv=mOv.labels.length?mOv.impressions:[null];
+    chartOvMonthly=new Chart(document.getElementById('chart-ov-monthly'),{
       type:'line',
       data:{
-        labels:D.social.monthly.labels,
+        labels:labOv,
         datasets:[
-          {label:'Engagements',data:D.social.monthly.engagements,borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y'},
-          {label:'Impressions',data:D.social.monthly.impressions,borderColor:GOLD,backgroundColor:'rgba(245,166,35,.05)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:GOLD,yAxisID:'y1'}
+          {label:'Engagements',data:engOv,borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y'},
+          {label:'Impressions',data:impOv,borderColor:GOLD,backgroundColor:'rgba(245,166,35,.05)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:GOLD,yAxisID:'y1'}
         ]
       },
       options:{responsive:true,maintainAspectRatio:false,
@@ -1064,14 +1222,16 @@ window.THORNS_DASHBOARD_DATA = window.T;
       pp.appendChild(div);
     });
 
-    // posts + engagements dual axis
-    new Chart(document.getElementById('chart-soc-posts-eng'),{
+    // posts + engagements dual axis (monthly — follows date range)
+    const ms=filteredMonthly(parseISODate(elThStart.value),parseISODate(elThEnd.value));
+    const labS=ms.labels.length?ms.labels:['No data'];
+    chartSocPostsEng=new Chart(document.getElementById('chart-soc-posts-eng'),{
       type:'bar',
       data:{
-        labels:D.social.monthly.labels,
+        labels:labS,
         datasets:[
-          {label:'Posts',data:D.social.monthly.posts,backgroundColor:BLUE+'55',borderRadius:4,yAxisID:'y1',order:2},
-          {label:'Engagements',type:'line',data:D.social.monthly.engagements,borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y',order:1}
+          {label:'Posts',data:ms.labels.length?ms.posts:[null],backgroundColor:BLUE+'55',borderRadius:4,yAxisID:'y1',order:2},
+          {label:'Engagements',type:'line',data:ms.labels.length?ms.engagements:[null],borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y',order:1}
         ]
       },
       options:{responsive:true,maintainAspectRatio:false,
@@ -1085,11 +1245,11 @@ window.THORNS_DASHBOARD_DATA = window.T;
     });
 
     // ER% line chart
-    const erData = D.social.monthly.engagements.map((e,i)=> parseFloat((e/D.social.monthly.impressions[i]*100).toFixed(2)));
-    new Chart(document.getElementById('chart-soc-er'),{
+    const erData=ms.labels.length?ms.engagements.map((e,i)=>parseFloat((e/ms.impressions[i]*100).toFixed(2))):[null];
+    chartSocEr=new Chart(document.getElementById('chart-soc-er'),{
       type:'line',
       data:{
-        labels:D.social.monthly.labels,
+        labels:labS,
         datasets:[{
           label:'Engagement Rate %',data:erData,
           borderColor:TEAL,backgroundColor:'rgba(28,200,160,.08)',fill:true,
@@ -1104,11 +1264,11 @@ window.THORNS_DASHBOARD_DATA = window.T;
     });
 
     // impressions line
-    new Chart(document.getElementById('chart-soc-imp'),{
+    chartSocImp=new Chart(document.getElementById('chart-soc-imp'),{
       type:'bar',
       data:{
-        labels:D.social.monthly.labels,
-        datasets:[{label:'Impressions',data:D.social.monthly.impressions,backgroundColor:GOLD+'66',borderColor:GOLD,borderWidth:2,borderRadius:5}]
+        labels:labS,
+        datasets:[{label:'Impressions',data:ms.labels.length?ms.impressions:[null],backgroundColor:GOLD+'66',borderColor:GOLD,borderWidth:2,borderRadius:5}]
       },
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)}}},
@@ -1336,25 +1496,8 @@ window.THORNS_DASHBOARD_DATA = window.T;
       }
     });
 
-    // monthly summary cards
-    const mg = document.getElementById('mon-grid');
-    const labels = D.social.monthly.labels;
-    const monthNames = {Mar:'March',Apr:'April',May:'May',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November'};
-    labels.forEach((lbl,i)=>{
-      const eng  = D.social.monthly.engagements[i];
-      const imp  = D.social.monthly.impressions[i];
-      const posts= D.social.monthly.posts[i];
-      const er   = (eng/imp*100).toFixed(2);
-      const erNum = parseFloat(er);
-      const erColor = erNum>=6?'teal':erNum>=4?'gold':'rose';
-      const div = document.createElement('div'); div.className='mon-card';
-      div.innerHTML=`<div class="mon-label">${monthNames[lbl]||lbl} 2025</div>
-        <div class="mon-stat"><span class="mon-stat-lbl">Impressions</span><span class="mon-stat-val" style="color:var(--gold)">${fmtN(imp)}</span></div>
-        <div class="mon-stat"><span class="mon-stat-lbl">Engagements</span><span class="mon-stat-val" style="color:var(--rose)">${fmtN(eng)}</span></div>
-        <div class="mon-stat"><span class="mon-stat-lbl">Posts</span><span class="mon-stat-val dim">${fmtN(posts)}</span></div>
-        <div class="mon-er"><span style="color:var(--txt-3);font-size:10px;text-transform:uppercase;letter-spacing:1px;">Eng. Rate  </span><span style="color:var(--${erColor});font-weight:800;">${er}%</span></div>`;
-      mg.appendChild(div);
-    });
+    // monthly summary cards (same range as date pill)
+    refillMonGrid(filteredMonthly(parseISODate(elThStart.value),parseISODate(elThEnd.value)));
 
     // observations
     const observations = [

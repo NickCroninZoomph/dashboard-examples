@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Static social dashboards: NBA on Prime, Invisalign NFL, Portland Thorns FC." />
   <title>Dashboards — dashboard-examples</title>
   <style>
@@ -22,10 +22,12 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      padding: max(32px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+        max(32px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     }
     main {
       max-width: 560px;
@@ -84,6 +86,10 @@
       border-color: #e02040;
       box-shadow: 0 0 0 1px rgba(200, 16, 46, 0.25);
     }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.2rem; }
+      a { padding: 14px 16px; }
+    }
   </style>
 </head>
 <body>
@@ -108,8 +114,8 @@
       </li>
       <li>
         <a class="thorns" href="thorns-dashboard/">
-          Portland Thorns FC — Social Snapshot
-          <span>KPIs, weekly trend, date range filter</span>
+          Portland Thorns FC — 2025 Sponsorship Report
+          <span>Broadcast, social, sponsors, insights, date range</span>
         </a>
       </li>
     </ul>

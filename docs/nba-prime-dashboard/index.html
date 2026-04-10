@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>NBA on Prime — Social Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -25,13 +25,19 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   background: var(--bg-page);
   color: var(--text-primary);
   min-height: 100vh;
+  min-height: 100dvh;
   font-size: 14px;
   line-height: 1.5;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* ── HEADER ─────────────────────────────────────────────────────────── */
@@ -39,6 +45,9 @@ body {
   background: linear-gradient(135deg, #001933 0%, #050C16 55%, var(--bg-page) 100%);
   border-bottom: 1px solid var(--bg-border);
   padding: 22px 32px;
+  padding-left: max(32px, env(safe-area-inset-left));
+  padding-right: max(32px, env(safe-area-inset-right));
+  padding-top: max(22px, env(safe-area-inset-top));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -122,6 +131,9 @@ body {
   max-width: 1440px;
   margin: 0 auto;
   padding: 28px 28px 48px;
+  padding-left: max(28px, env(safe-area-inset-left));
+  padding-right: max(28px, env(safe-area-inset-right));
+  padding-bottom: max(48px, env(safe-area-inset-bottom));
 }
 .section-label {
   font-size: 10.5px;
@@ -447,7 +459,10 @@ tbody tr:hover td { background: rgba(255,255,255,0.025); transition: background 
   .header          { flex-direction: column; align-items: flex-start; }
   .header-right    { width: 100%; justify-content: flex-start; }
   .date-range-pill { flex-wrap: wrap; max-width: 100%; }
-  .dashboard       { padding: 16px; }
+  .dashboard       { padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .chart-wrap      { min-height: 220px; }
+  .api-banner      { flex-wrap: wrap; }
+  .api-code        { margin-left: 0; white-space: normal; word-break: break-all; }
 }
 </style>
 </head>

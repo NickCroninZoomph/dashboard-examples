@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Invisalign NFL Sponsorship — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -379,20 +379,30 @@ tbody tr:hover td{background:rgba(255,255,255,.025);transition:background .12s;}
 ═══════════════════════════════════════════════ */
 @media(max-width:1100px){
   .kpi-grid{grid-template-columns:repeat(2,1fr);}
-  .g2,.g23,.g32{grid-template-columns:1fr;}
+  .g2,.g23,.g32,.g3{grid-template-columns:1fr;}
   .team-grid{grid-template-columns:repeat(2,1fr);}
   .prog-row{grid-template-columns:160px 1fr 1fr 1fr;}
 }
 @media(max-width:780px){
+  html,body{overflow-x:hidden;overflow-y:auto;height:auto;min-height:100%;-webkit-overflow-scrolling:touch;}
+  .shell{height:auto;min-height:100vh;min-height:100dvh;overflow:visible;}
+  .sidebar{height:auto;min-height:100vh;align-self:stretch;}
+  .content{height:auto;overflow:visible;padding-bottom:max(24px,env(safe-area-inset-bottom));}
   :root{--sidebar-w:60px;}
   .brand-name,.brand-sub,.nav-label,.nav-item span{display:none;}
   .nav-item{justify-content:center;padding:12px;}
   .nav-icon{width:auto;}
-  .content-toolbar{padding:8px 16px 10px;}
+  .content-toolbar{padding:8px 16px 10px;padding-right:max(16px,env(safe-area-inset-right));}
   .date-range-pill{flex-wrap:wrap;justify-content:flex-end;max-width:100%;}
   .team-grid{grid-template-columns:1fr;}
   .asset-cards{grid-template-columns:1fr 1fr;}
-  .page{padding:16px;}
+  .page{padding:16px;padding-bottom:max(32px,env(safe-area-inset-bottom));}
+  .hero{flex-direction:column;align-items:stretch;gap:16px;}
+  .hero-right{flex-wrap:wrap;justify-content:space-between;}
+  .plat-pills{flex-wrap:wrap;}
+  .g3{grid-template-columns:1fr;}
+  .prog-list{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .prog-row{min-width:520px;}
 }
 </style>
 </head>
