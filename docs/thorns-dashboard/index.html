@@ -1,385 +1,1393 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Portland Thorns — Social Snapshot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portland Thorns — 2025 Sponsorship Report</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg-page: #0a0c10;
-  --bg-surface: #12151c;
-  --bg-elevated: #1a1f28;
-  --bg-border: #2a3140;
-  --thorns-red: #c8102e;
-  --thorns-red-dim: #9a0c24;
-  --thorns-glow: rgba(200, 16, 46, 0.12);
-  --green: #1fa37a;
-  --text-primary: #eef2f7;
-  --text-secondary: #8a96a8;
-  --text-muted: #4a5568;
+  --bg:          #0A0A0E;
+  --surface:     #111118;
+  --elevated:    #191921;
+  --border:      #252530;
+  --border-light:#303042;
+
+  --rose:        #C8102E;
+  --rose-dim:    #961024;
+  --rose-glow:   rgba(200,16,46,0.15);
+  --rose-faint:  rgba(200,16,46,0.07);
+  --gold:        #F5A623;
+  --teal:        #1CC8A0;
+  --blue:        #4D8FF5;
+  --purple:      #9B6EE8;
+
+  --txt:         #F0EEF5;
+  --txt-2:       #7875A0;
+  --txt-3:       #3D3A55;
+
+  --sidebar-w:   230px;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  background: var(--bg-page);
-  color: var(--text-primary);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.5;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
+
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ─────────────────────────────── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;overflow-y:auto;
 }
-.header {
-  background: linear-gradient(135deg, #1a0508 0%, #0a0c10 55%, var(--bg-page) 100%);
-  border-bottom: 1px solid var(--bg-border);
-  padding: 22px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+.sidebar-brand{
+  padding:22px 20px 18px;
+  background:linear-gradient(160deg,#1A0008 0%,var(--surface) 100%);
+  border-bottom:1px solid var(--border);
 }
-.header-left { display: flex; align-items: center; gap: 16px; }
-.thorns-badge {
-  background: var(--thorns-red);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 4px;
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.brand-rose{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--rose);display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex-shrink:0;
 }
-.header h1 {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+.brand-name{font-size:15px;font-weight:800;letter-spacing:-.2px;}
+.brand-sub{font-size:11px;color:var(--txt-2);margin-top:1px;}
+.brand-season{
+  display:inline-block;margin-top:10px;
+  background:rgba(200,16,46,.18);border:1px solid rgba(200,16,46,.3);
+  color:var(--rose);font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;border-radius:12px;
 }
-.header-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-.header-right { display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; }
-.date-range-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-surface);
-  border: 1px solid var(--bg-border);
-  border-top: 2px solid var(--thorns-red);
-  border-radius: 10px;
-  padding: 8px 12px;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.28), 0 0 28px var(--thorns-glow);
+.nav-section{padding:14px 0 4px;}
+.nav-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt-3);padding:0 20px 8px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 20px;
+  cursor:pointer;font-size:13px;font-weight:500;color:var(--txt-2);
+  border-left:3px solid transparent;transition:all .13s;text-decoration:none;
 }
-.date-range-pill input[type="date"] {
-  flex: 1;
-  min-width: 0;
-  max-width: 132px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-primary);
-  background: transparent;
-  border: none;
-  padding: 2px 0;
-  color-scheme: dark;
+.nav-item:hover{background:var(--elevated);color:var(--txt);}
+.nav-item.active{background:var(--rose-faint);color:var(--rose);border-left-color:var(--rose);font-weight:700;}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);}
+.footer-badge{background:var(--elevated);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
+.fb-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-3);}
+.fb-val{font-size:13px;font-weight:700;color:var(--rose);margin-top:2px;}
+.fb-sub{font-size:10px;color:var(--txt-3);margin-top:2px;}
+
+/* ── CONTENT ─────────────────────────────── */
+.content{flex:1;overflow-y:auto;height:100vh;}
+.page{display:none;padding:28px 28px 52px;min-height:100%;}
+.page.active{display:block;}
+
+/* ── SECTION LABEL ───────────────────────── */
+.slabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--rose);display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+.gap{margin-bottom:26px;}
+
+/* ── KPI CARDS ───────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-grid.five{grid-template-columns:repeat(5,1fr);}
+.kpi-grid.three{grid-template-columns:repeat(3,1fr);}
+.kpi{background:var(--surface);border:1px solid var(--border);
+  border-top:3px solid var(--rose);border-radius:12px;padding:18px 20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 28px var(--rose-glow);}
+.kpi.gold{border-top-color:var(--gold);box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 28px rgba(245,166,35,.1);}
+.kpi.teal{border-top-color:var(--teal);box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 28px rgba(28,200,160,.1);}
+.kpi.blue{border-top-color:var(--blue);box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 28px rgba(77,143,245,.1);}
+.kpi.purple{border-top-color:var(--purple);}
+.kpi-lbl{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--txt-2);margin-bottom:7px;}
+.kpi-val{font-size:26px;font-weight:800;letter-spacing:-1px;line-height:1;color:var(--rose);}
+.kpi-val.gold{color:var(--gold);}
+.kpi-val.teal{color:var(--teal);}
+.kpi-val.blue{color:var(--blue);}
+.kpi-val.white{color:var(--txt);}
+.kpi-sub{font-size:11px;color:var(--txt-3);margin-top:5px;}
+
+/* ── CARDS ───────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
+.ct{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.cs{font-size:11px;color:var(--txt-3);margin-bottom:16px;}
+.cw{position:relative;}
+.h180{height:180px;}.h200{height:200px;}.h220{height:220px;}.h240{height:240px;}
+.h260{height:260px;}.h280{height:280px;}.h300{height:300px;}.h320{height:320px;}.h360{height:360px;}
+
+/* ── GRID ────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g23{display:grid;grid-template-columns:3fr 2fr;gap:16px;}
+.g32{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.g13{display:grid;grid-template-columns:1fr 3fr;gap:16px;}
+
+/* ── HERO BAND ───────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,#1A0008 0%,#110010 40%,var(--bg) 100%);
+  border:1px solid var(--border);border-radius:14px;
+  padding:26px 30px;margin-bottom:26px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
 }
-.date-range-pill input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: opacity(0.75);
-  cursor: pointer;
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:6px;}
+.hero-title{font-size:24px;font-weight:800;letter-spacing:-.4px;}
+.hero-sub{font-size:13px;color:var(--txt-2);margin-top:4px;max-width:480px;}
+.hero-stats{display:flex;gap:24px;flex-shrink:0;}
+.hs{text-align:center;}
+.hs-val{font-size:22px;font-weight:800;}
+.hs-val.rose{color:var(--rose);}
+.hs-val.gold{color:var(--gold);}
+.hs-val.teal{color:var(--teal);}
+.hs-val.blue{color:var(--blue);}
+.hs-lbl{font-size:10px;color:var(--txt-2);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+
+/* ── TABLES ──────────────────────────────── */
+.tw{overflow-x:auto;border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--elevated);color:var(--txt-2);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.2px;padding:10px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--txt);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,.02);}
+.num{font-variant-numeric:tabular-nums;font-weight:700;}
+.dim{color:var(--txt-2);}
+.rank{color:var(--txt-3);font-weight:700;}
+.rank-1{color:var(--gold);}
+.rank-2{color:var(--txt-2);}
+.rank-3{color:#CD7F32;}
+
+/* ── BADGES ──────────────────────────────── */
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;padding:3px 8px;border-radius:5px;}
+.b-bc{background:rgba(200,16,46,.18);color:var(--rose);}
+.b-social{background:rgba(77,143,245,.18);color:var(--blue);}
+.b-both{background:rgba(28,200,160,.18);color:var(--teal);}
+.b-ion{background:rgba(200,16,46,.15);color:var(--rose);}
+.b-cbs{background:rgba(77,143,245,.15);color:var(--blue);}
+.b-abc{background:rgba(245,166,35,.15);color:var(--gold);}
+.b-espn{background:rgba(155,110,232,.15);color:var(--purple);}
+.b-fox{background:rgba(28,200,160,.15);color:var(--teal);}
+.b-other{background:rgba(122,117,160,.15);color:var(--txt-2);}
+
+/* ── CHIP ────────────────────────────────── */
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;
+  background:rgba(200,16,46,.12);color:var(--rose);}
+.chip.teal{background:rgba(28,200,160,.14);color:var(--teal);}
+.chip.gold{background:rgba(245,166,35,.14);color:var(--gold);}
+.chip.blue{background:rgba(77,143,245,.14);color:var(--blue);}
+.chip.purple{background:rgba(155,110,232,.14);color:var(--purple);}
+
+/* ── PARTNER ROW BARS ────────────────────── */
+.pbar-list{display:flex;flex-direction:column;gap:10px;}
+.pbar-row{padding:10px 0;border-bottom:1px solid var(--border);}
+.pbar-row:last-child{border-bottom:none;}
+.pbar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.pbar-name{font-size:13px;font-weight:700;}
+.pbar-val{font-size:13px;font-weight:800;color:var(--rose);}
+.pbar-track{height:7px;background:var(--elevated);border-radius:4px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--rose-dim),var(--rose));}
+.pbar-fill.gold{background:linear-gradient(90deg,#c47800,var(--gold));}
+.pbar-fill.teal{background:linear-gradient(90deg,#12987a,var(--teal));}
+.pbar-meta{font-size:11px;color:var(--txt-3);margin-top:4px;}
+
+/* ── GAME LIST ───────────────────────────── */
+.game-list{display:flex;flex-direction:column;gap:6px;}
+.game-row{
+  display:flex;align-items:center;gap:14px;padding:10px 14px;
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:8px;font-size:12px;
 }
-.date-range-dash {
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  opacity: 0.7;
+.game-date{color:var(--txt-2);font-weight:600;min-width:56px;}
+.game-matchup{font-weight:700;flex:1;}
+.game-vs{color:var(--txt-2);margin:0 6px;}
+.game-network{flex-shrink:0;}
+
+/* ── PLATFORM PILLS ──────────────────────── */
+.plat-pills{display:flex;gap:12px;flex-wrap:wrap;}
+.plat-pill{
+  flex:1;min-width:120px;background:var(--elevated);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;
 }
-.dashboard { max-width: 1100px; margin: 0 auto; padding: 28px 28px 48px; }
-.section-label {
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--thorns-red);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.pp-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
+.pp-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--txt-2);}
+.pp-eng{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-top:3px;}
+.pp-meta{font-size:11px;color:var(--txt-3);margin-top:2px;}
+
+/* ── PARTNER SCORECARDS ──────────────────── */
+.partner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.partner-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .15s;
 }
-.section-label::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--bg-border);
+.partner-card:hover{border-color:var(--border-light);}
+.pc-header{padding:14px 18px;background:linear-gradient(135deg,#1A0008,var(--surface));border-bottom:2px solid var(--rose);}
+.pc-name{font-size:14px;font-weight:800;color:var(--txt);}
+.pc-body{padding:14px 18px;}
+.pc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);}
+.pc-row:last-child{border-bottom:none;}
+.pc-lbl{font-size:11px;color:var(--txt-2);}
+.pc-val{font-size:13px;font-weight:700;}
+.pc-tag{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+
+/* ── NETWORK GRID ────────────────────────── */
+.net-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.net-card{background:var(--elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
+.net-name{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.net-val{font-size:20px;font-weight:800;color:var(--rose);}
+.net-sub{font-size:10px;color:var(--txt-3);margin-top:4px;}
+
+/* ── SPLIT BADGE ─────────────────────────── */
+.split-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.split-row:last-child{border-bottom:none;}
+.split-name{font-weight:700;flex:1;}
+.split-bc{font-size:12px;color:var(--rose);font-weight:700;min-width:90px;text-align:right;}
+.split-soc{font-size:12px;color:var(--blue);font-weight:700;min-width:90px;text-align:right;}
+.split-total{font-size:13px;font-weight:800;color:var(--teal);min-width:90px;text-align:right;}
+
+/* ── INSIGHTS ────────────────────────────── */
+.insight-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.insight-card{
+  background:var(--elevated);border:1px solid var(--border);border-radius:12px;
+  padding:20px 22px;border-left:4px solid var(--rose);
 }
-.section-gap { margin-bottom: 28px; }
-.kpi-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+.insight-card.gold{border-left-color:var(--gold);}
+.insight-card.teal{border-left-color:var(--teal);}
+.insight-card.blue{border-left-color:var(--blue);}
+.insight-card.purple{border-left-color:var(--purple);}
+.ic-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt-3);margin-bottom:8px;}
+.ic-val{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--rose);line-height:1.1;}
+.ic-val.gold{color:var(--gold);}
+.ic-val.teal{color:var(--teal);}
+.ic-val.blue{color:var(--blue);}
+.ic-val.purple{color:var(--purple);}
+.ic-sub{font-size:11px;color:var(--txt-2);margin-top:7px;}
+
+/* ── OBSERVATIONS ────────────────────────── */
+.obs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.obs-item{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px 18px;background:var(--elevated);border:1px solid var(--border);
+  border-radius:10px;
 }
-.kpi-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--bg-border);
-  border-top: 3px solid var(--thorns-red);
-  border-radius: 12px;
-  padding: 20px 22px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), 0 0 32px var(--thorns-glow);
+.obs-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.obs-text{font-size:13px;color:var(--txt-2);line-height:1.6;}
+.obs-text strong{color:var(--txt);font-weight:700;}
+
+/* ── EFFICIENCY TABLE ────────────────────── */
+.eff-bar-row{display:flex;align-items:center;gap:8px;}
+.eff-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.eff-fill{height:100%;border-radius:3px;}
+
+/* ── MONTHLY SUMMARY TABLE ───────────────── */
+.mon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.mon-card{background:var(--elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.mon-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt-2);margin-bottom:10px;}
+.mon-stat{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;}
+.mon-stat-lbl{font-size:11px;color:var(--txt-3);}
+.mon-stat-val{font-size:13px;font-weight:700;}
+.mon-er{font-size:15px;font-weight:800;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media(max-width:1100px){
+  .kpi-grid,.kpi-grid.five,.kpi-grid.three{grid-template-columns:repeat(2,1fr);}
+  .g2,.g23,.g32,.g13{grid-template-columns:1fr;}
+  .partner-grid{grid-template-columns:repeat(2,1fr);}
+  .net-grid{grid-template-columns:repeat(2,1fr);}
+  .insight-strip{grid-template-columns:repeat(2,1fr);}
+  .obs-grid{grid-template-columns:1fr;}
+  .mon-grid{grid-template-columns:repeat(2,1fr);}
 }
-.kpi-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.6px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-.kpi-value {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--text-primary);
-}
-.kpi-value.accent { color: var(--thorns-red); }
-.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-.card {
-  background: var(--bg-surface);
-  border: 1px solid var(--bg-border);
-  border-radius: 12px;
-  padding: 22px 24px;
-}
-.chart-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-.chart-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 18px; }
-.chart-wrap { position: relative; height: 260px; }
-@media (max-width: 900px) {
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 680px) {
-  .header { flex-direction: column; align-items: flex-start; }
-  .header-right { width: 100%; justify-content: flex-start; }
-  .kpi-row { grid-template-columns: 1fr; }
-  .dashboard { padding: 16px; }
+@media(max-width:700px){
+  :root{--sidebar-w:60px;}
+  .brand-name,.brand-sub,.brand-season,.nav-lbl,.nav-item span,.sidebar-footer{display:none;}
+  .nav-item{justify-content:center;padding:12px;}
+  .page{padding:14px;}
+  .partner-grid{grid-template-columns:1fr;}
+  .insight-strip{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
+
 <script>
-window.THORNS_DASHBOARD_DATA = {
-  meta: {
-    reportTitle: "Portland Thorns FC",
-    reportYear: 2026,
-    lastUpdated: "April 6, 2026",
+window.T = {
+  meta: { title:"Portland Thorns FC", season:"2025 Season", updated:"April 7, 2026", games:20, partners:18 },
+
+  broadcast: {
+    totalValue: 13910698,
+    totalImpressions: 938818769,
+    games: 20,
+    networks: ["ION","CBS","ABC","MNT","MSG","Fox","CBS Sports Network","ESPN"],
+    networkDetections: { ION:18117, CBS:4752, ABC:4310, MNT:3809, MSG:2817, Fox:2496, "CBS Sports":2161, ESPN:1511 },
+    partners: [
+      { name:"Toyota",           value:4530761, impressions:205326850, detections:9612,  clarity:.462 },
+      { name:"Ally Financial",   value:4340725, impressions:328543876, detections:12547, clarity:.337 },
+      { name:"Ring",             value:1825390, impressions:180964703, detections:5083,  clarity:.461 },
+      { name:"Alaska Airlines",  value:981101,  impressions:87500711,  detections:3141,  clarity:.394 },
+      { name:"Portland Thorns",  value:910097,  impressions:85775879,  detections:1453,  clarity:.619 },
+      { name:"First Tech FCU",   value:867894,  impressions:49998076,  detections:2172,  clarity:.443 },
+      { name:"Xfinity",          value:691817,  impressions:36565520,  detections:2751,  clarity:.435 },
+      { name:"Modelo",           value:224366,  impressions:12361337,  detections:1148,  clarity:.384 },
+      { name:"Old Trapper",      value:179615,  impressions:15181784,  detections:617,   clarity:.448 },
+      { name:"Kaiser Permanente",value:177260,  impressions:9477309,   detections:271,   clarity:.443 },
+      { name:"Key Bank",         value:106497,  impressions:6124629,   detections:578,   clarity:.364 },
+      { name:"Bobbie Formula",   value:73845,   impressions:8318358,   detections:164,   clarity:.516 },
+      { name:"Coca-Cola",        value:41568,   impressions:3798523,   detections:236,   clarity:.422 },
+      { name:"SeatGeek",         value:20122,   impressions:1484933,   detections:78,    clarity:.533 },
+      { name:"Tillamook",        value:16328,   impressions:1279263,   detections:46,    clarity:.549 },
+      { name:"NW Natural",       value:5394,    impressions:578999,    detections:42,    clarity:.477 },
+      { name:"Hyatt",            value:3125,    impressions:328293,    detections:20,    clarity:.485 },
+      { name:"Aviation Gin",     value:2148,    impressions:462914,    detections:14,    clarity:.544 }
+    ],
+    assetBreakdown: [
+      { name:"Jersey (Ally, Ring, Alaska)", value:4480887, pct:32.2 },
+      { name:"Field Level Signage",        value:3876514, pct:27.9 },
+      { name:"Additional Exposure",        value:4165218, pct:29.9 },
+      { name:"Digital Overlay",            value:1843967, pct:13.3 },
+      { name:"Upper Level Signage",        value:17249,   pct:0.12 },
+      { name:"Videoboard",                 value:15756,   pct:0.11 }
+    ],
+    games: [
+      { date:"Mar 15", home:"Kansas City Current", away:"Portland Thorns", network:"ABC/ESPN+",       home_flag:false },
+      { date:"Mar 30", home:"Portland Thorns",     away:"NC Courage",      network:"ION",             home_flag:true  },
+      { date:"Apr 23", home:"Portland Thorns",     away:"Gotham FC",       network:"ION",             home_flag:true  },
+      { date:"Apr 27", home:"Portland Thorns",     away:"Racing Louisville",network:"CBS Sports",     home_flag:true  },
+      { date:"May 3",  home:"Portland Thorns",     away:"Orlando Pride",   network:"ION",             home_flag:true  },
+      { date:"May 11", home:"San Diego Wave",      away:"Portland Thorns", network:"ION",             home_flag:false },
+      { date:"Jun 7",  home:"Bay FC",              away:"Portland Thorns", network:"ION",             home_flag:false },
+      { date:"Jun 15", home:"Portland Thorns",     away:"Washington Spirit",network:"CBS",            home_flag:true  },
+      { date:"Jun 22", home:"Portland Thorns",     away:"Chicago Stars",   network:"ABC",             home_flag:true  },
+      { date:"Aug 3",  home:"Washington Spirit",   away:"Portland Thorns", network:"ION",             home_flag:false },
+      { date:"Aug 10", home:"Portland Thorns",     away:"Seattle Reign",   network:"CBS Sports",      home_flag:true  },
+      { date:"Aug 16", home:"NC Courage",          away:"Portland Thorns", network:"ION",             home_flag:false },
+      { date:"Aug 24", home:"Portland Thorns",     away:"KC Current",      network:"CBS",             home_flag:true  },
+      { date:"Sep 21", home:"Portland Thorns",     away:"San Diego Wave",  network:"CBS",             home_flag:true  },
+      { date:"Sep 27", home:"Gotham FC",           away:"Portland Thorns", network:"Fox",             home_flag:false },
+      { date:"Oct 5",  home:"Portland Thorns",     away:"Bay FC",          network:"CBS",             home_flag:true  },
+      { date:"Oct 19", home:"Angel City FC",       away:"Portland Thorns", network:"ABC",             home_flag:false },
+      { date:"Nov 9",  home:"Portland Thorns",     away:"San Diego Wave",  network:"CBS",             home_flag:true  }
+    ]
   },
-  kpi: {
-    totalEngagements: 1842093,
-    totalImpressions: 45200000,
-    videoViews: 892000,
-    avgEngagementRate: 4.08,
+
+  social: {
+    totalValue: 351165,
+    totalImpressions: 333365228,
+    totalEngagements: 13112766,
+    platforms: [
+      { name:"YouTube",         posts:6324, color:"#FF0000" },
+      { name:"Instagram",       posts:4313, color:"#E1306C" },
+      { name:"Facebook",        posts:3916, color:"#4D8FF5" },
+      { name:"Twitter",         posts:3807, color:"#1DA1F2" },
+      { name:"Instagram Story", posts:3658, color:"#F77737" },
+      { name:"TikTok",          posts:1319, color:"#69C9D0" },
+      { name:"LinkedIn",        posts:193,  color:"#0A66C2" }
+    ],
+    monthly: {
+      labels:      ["Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"],
+      posts:       [2478, 3057, 2318, 1846, 1280, 3836, 2392, 2702, 3621],
+      impressions: [29590365, 50801982, 37301968, 21147924, 31671348, 42918520, 33495600, 29307754, 57129767],
+      engagements: [1259509, 2581256, 2389774, 805860, 970058, 1264645, 929053, 840091, 2072520]
+    },
+    partners: [
+      { name:"Ring",            value:134542, impressions:79296859,  engagements:3033250, postValue:2710860 },
+      { name:"Alaska Airlines", value:74942,  impressions:55371230,  engagements:2220038, postValue:1596969 },
+      { name:"Ally Financial",  value:73025,  impressions:89796187,  engagements:3327054, postValue:3225638 },
+      { name:"Toyota",          value:32336,  impressions:42204954,  engagements:1687134, postValue:1868900 },
+      { name:"First Tech FCU",  value:15583,  impressions:16710554,  engagements:557999,  postValue:538689  },
+      { name:"Xfinity",         value:6254,   impressions:11297484,  engagements:449263,  postValue:431585  },
+      { name:"Key Bank",        value:4275,   impressions:21229813,  engagements:1112757, postValue:670692  },
+      { name:"Modelo",          value:2585,   impressions:6393103,   engagements:289447,  postValue:249295  },
+      { name:"SeatGeek",        value:2457,   impressions:2711018,   engagements:112932,  postValue:99669   },
+      { name:"Coca-Cola",       value:2139,   impressions:2891896,   engagements:101372,  postValue:93688   },
+      { name:"Old Trapper",     value:762,    impressions:1464798,   engagements:53266,   postValue:98228   },
+      { name:"Bobbie Formula",  value:560,    impressions:259292,    engagements:6498,    postValue:24195   },
+      { name:"Tillamook",       value:450,    impressions:2113721,   engagements:101519,  postValue:67402   },
+      { name:"Hyatt",           value:439,    impressions:277427,    engagements:5595,    postValue:5601    },
+      { name:"Portland Pet",    value:428,    impressions:188229,    engagements:8924,    postValue:6269    },
+      { name:"NW Natural",      value:368,    impressions:944657,    engagements:34840,   postValue:29015   },
+      { name:"Aviation Gin",    value:19,     impressions:157156,    engagements:7972,    postValue:5765    }
+    ],
+    assetBreakdown: [
+      { name:"Jersey (Ally, Ring, Alaska)", value:195067, pct:55.5 },
+      { name:"Digital Overlay",             value:62535,  pct:17.8 },
+      { name:"Additional Exposure",         value:37482,  pct:10.7 },
+      { name:"Field Level Signage",         value:14313,  pct:4.1  },
+      { name:"Text Mention",                value:6498,   pct:1.9  },
+      { name:"Upper Level Signage",         value:4630,   pct:1.3  },
+      { name:"Videoboard",                  value:400,    pct:0.1  }
+    ]
   },
-  weekly: {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    engagements: [412000, 445000, 478000, 509093],
-    impressions: [10200000, 11000000, 11800000, 12200000],
-  },
+
+  combined: [
+    { name:"Toyota",           broadcast:4530761, social:32336,  total:4563097 },
+    { name:"Ally Financial",   broadcast:4340725, social:73025,  total:4413750 },
+    { name:"Ring",             broadcast:1825390, social:134542, total:1959932 },
+    { name:"Alaska Airlines",  broadcast:981101,  social:74942,  total:1056043 },
+    { name:"First Tech FCU",   broadcast:867894,  social:15583,  total:883477  },
+    { name:"Xfinity",          broadcast:691817,  social:6254,   total:698071  },
+    { name:"Modelo",           broadcast:224366,  social:2585,   total:226951  },
+    { name:"Old Trapper",      broadcast:179615,  social:762,    total:180377  },
+    { name:"Kaiser Permanente",broadcast:177260,  social:0,      total:177260  },
+    { name:"Key Bank",         broadcast:106497,  social:4275,   total:110772  },
+    { name:"Bobbie Formula",   broadcast:73845,   social:560,    total:74405   },
+    { name:"Coca-Cola",        broadcast:41568,   social:2139,   total:43707   },
+    { name:"SeatGeek",         broadcast:20122,   social:2457,   total:22579   },
+    { name:"Tillamook",        broadcast:16328,   social:450,    total:16778   },
+    { name:"NW Natural",       broadcast:5394,    social:368,    total:5762    },
+    { name:"Hyatt",            broadcast:3125,    social:439,    total:3564    },
+    { name:"Aviation Gin",     broadcast:2148,    social:19,     total:2167    }
+  ]
 };
+window.THORNS_DASHBOARD_DATA = window.T;
 </script>
 
-<header class="header">
-  <div class="header-left">
-    <div class="thorns-badge">NWSL</div>
-    <div>
-      <h1 id="hdr-title">Portland Thorns FC</h1>
-      <div class="header-sub">Social performance snapshot</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="date-range-pill" role="group" aria-label="Date range">
-      <input type="date" id="filter-start" aria-label="From date" />
-      <span class="date-range-dash" aria-hidden="true">–</span>
-      <input type="date" id="filter-end" aria-label="To date" />
-    </div>
-  </div>
-</header>
+<div class="shell">
 
-<main class="dashboard">
-  <div class="section-gap">
-    <div class="section-label">At a glance</div>
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-label">Total engagements</div>
-        <div class="kpi-value accent" id="kpi-eng"></div>
-        <div class="kpi-sub">Likes, comments, shares</div>
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <div class="brand-rose">&#127801;</div>
+        <div>
+          <div class="brand-name">Portland Thorns FC</div>
+          <div class="brand-sub">Sponsorship Dashboard</div>
+        </div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Impressions</div>
-        <div class="kpi-value" id="kpi-imp"></div>
-        <div class="kpi-sub">Estimated reach</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Video views</div>
-        <div class="kpi-value" id="kpi-vid"></div>
-        <div class="kpi-sub">Short-form &amp; long-form</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Avg engagement rate</div>
-        <div class="kpi-value" id="kpi-er"></div>
-        <div class="kpi-sub">Post-weighted</div>
-      </div>
+      <div class="brand-season">2025 Season</div>
     </div>
-  </div>
 
-  <div class="section-gap">
-    <div class="section-label">Trend</div>
-    <div class="card">
-      <div class="chart-title">Engagements &amp; impressions</div>
-      <div class="chart-sub">Sample weekly series — replace with live data</div>
-      <div class="chart-wrap"><canvas id="chart-weekly"></canvas></div>
+    <div class="nav-section">
+      <div class="nav-lbl">Dashboards</div>
+      <a class="nav-item active" data-page="overview"><span class="nav-icon">&#128202;</span><span>Overview</span></a>
+      <a class="nav-item" data-page="broadcast"><span class="nav-icon">&#128250;</span><span>Broadcast</span></a>
+      <a class="nav-item" data-page="social"><span class="nav-icon">&#128241;</span><span>Social Media</span></a>
+      <a class="nav-item" data-page="partners"><span class="nav-icon">&#129309;</span><span>Sponsors</span></a>
+      <a class="nav-item" data-page="insights"><span class="nav-icon">&#128161;</span><span>Insights</span></a>
     </div>
+
+    <div class="sidebar-footer">
+      <div class="footer-badge">
+        <div class="fb-lbl">Season</div>
+        <div class="fb-val">2025 NWSL</div>
+        <div class="fb-sub">Mar 15 &ndash; Nov 16, 2025</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- ══════════════ PAGE: OVERVIEW ══════════════ -->
+    <div id="page-overview" class="page active">
+
+      <div class="hero">
+        <div>
+          <div class="hero-eyebrow">2025 Season &middot; Sponsorship Report</div>
+          <div class="hero-title">Portland Thorns FC &mdash; Full Season</div>
+          <div class="hero-sub">Combined broadcast &amp; social media sponsorship performance across 18 partners, 20 games, and 9 months of the 2025 NWSL season.</div>
+        </div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-val rose">$14.3M</div><div class="hs-lbl">Total Value</div></div>
+          <div class="hs"><div class="hs-val gold">1.27B</div><div class="hs-lbl">Impressions</div></div>
+          <div class="hs"><div class="hs-val teal">18</div><div class="hs-lbl">Sponsors</div></div>
+          <div class="hs"><div class="hs-val blue">20</div><div class="hs-lbl">Games</div></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Season at a Glance</div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-lbl">Broadcast Exposure Value</div><div class="kpi-val">$13.9M</div><div class="kpi-sub">AI logo detection across TV</div></div>
+          <div class="kpi gold"><div class="kpi-lbl">Social Exposure Value</div><div class="kpi-val gold">$351K</div><div class="kpi-sub">Logo + mention value on social</div></div>
+          <div class="kpi teal"><div class="kpi-lbl">Combined Impressions</div><div class="kpi-val teal">1.27B</div><div class="kpi-sub">TV + social combined reach</div></div>
+          <div class="kpi blue"><div class="kpi-lbl">Social Engagements</div><div class="kpi-val blue">13.1M</div><div class="kpi-sub">Likes, comments, shares, views</div></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Value &amp; Reach by Channel</div>
+        <div class="g3">
+          <div class="card">
+            <div class="ct">Exposure Value Split</div>
+            <div class="cs">Broadcast drives 97.5% of total value</div>
+            <div class="cw h220"><canvas id="chart-channel-val"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ct">Impressions Split</div>
+            <div class="cs">Broadcast 73.8% &bull; Social 26.2%</div>
+            <div class="cw h220"><canvas id="chart-channel-imp"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ct">Top 6 Partners &mdash; Combined</div>
+            <div class="cs">Toyota &amp; Ally lead by wide margin</div>
+            <div class="cw h220"><canvas id="chart-combined-top"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Combined Partner Ranking &mdash; Broadcast + Social</div>
+        <div class="card" style="padding:0 0 4px;">
+          <div style="padding:14px 22px 0;display:flex;gap:24px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--txt-3);">
+            <span style="min-width:24px">#</span>
+            <span style="flex:1">Partner</span>
+            <span style="min-width:110px;text-align:right;color:var(--rose)">Broadcast</span>
+            <span style="min-width:100px;text-align:right;color:var(--blue)">Social</span>
+            <span style="min-width:100px;text-align:right;color:var(--teal)">Total</span>
+          </div>
+          <div id="combined-list" style="padding:4px 22px 12px;"></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Social &mdash; Monthly Trend</div>
+        <div class="card">
+          <div class="ct">Monthly Impressions &amp; Engagements</div>
+          <div class="cs">November playoff push drove highest impression month; May &amp; April peaked on engagement rate</div>
+          <div class="cw h260"><canvas id="chart-ov-monthly"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PAGE: BROADCAST ══════════════ -->
+    <div id="page-broadcast" class="page">
+
+      <div style="margin-bottom:24px;">
+        <div style="font-size:20px;font-weight:800;">Broadcast Performance</div>
+        <div style="font-size:13px;color:var(--txt-2);margin-top:4px;">TV logo detection across 20 games &middot; 8 networks &middot; 18 sponsors &middot; 2025 NWSL Season</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Broadcast KPIs</div>
+        <div class="kpi-grid five">
+          <div class="kpi"><div class="kpi-lbl">Total Exposure Value</div><div class="kpi-val">$13.9M</div><div class="kpi-sub">AI-measured logo value</div></div>
+          <div class="kpi gold"><div class="kpi-lbl">Total Impressions</div><div class="kpi-val gold">938.8M</div><div class="kpi-sub">Cumulative TV audience</div></div>
+          <div class="kpi teal"><div class="kpi-lbl">Total Detections</div><div class="kpi-val teal">39.9K</div><div class="kpi-sub">Individual logo appearances</div></div>
+          <div class="kpi blue"><div class="kpi-lbl">Avg Logo Clarity</div><div class="kpi-val blue">44.9%</div><div class="kpi-sub">Weighted across all logos</div></div>
+          <div class="kpi"><div class="kpi-lbl">Value / 1K Detections</div><div class="kpi-val white">$348</div><div class="kpi-sub">Avg broadcast efficiency</div></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Network Breakdown</div>
+        <div class="g23">
+          <div class="card">
+            <div class="ct">Logo Detections by Network</div>
+            <div class="cs">ION accounts for 45.3% of all logo detections &mdash; the primary NWSL broadcast partner</div>
+            <div class="cw h240"><canvas id="chart-bc-networks"></canvas></div>
+          </div>
+          <div>
+            <div class="net-grid" id="net-grid" style="grid-template-columns:repeat(2,1fr);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Sponsor Exposure Value</div>
+        <div class="g23">
+          <div class="card">
+            <div class="ct">Broadcast Exposure Value by Sponsor</div>
+            <div class="cs">Toyota &amp; Ally Financial = 63.4% of total broadcast value</div>
+            <div class="cw h360"><canvas id="chart-bc-sponsors"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ct">Value by Asset Type</div>
+            <div class="cs">Jersey, Field Signage &amp; Additional Exposure = 90%</div>
+            <div class="cw h360"><canvas id="chart-bc-assets"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Sponsor Detail &mdash; Broadcast</div>
+        <div class="card" style="padding:0;">
+          <div class="tw">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Sponsor</th><th>Exposure Value</th><th>TV Impressions</th>
+                  <th>Detections</th><th>Value / Detection</th><th>Value / M Impr</th><th>Clarity</th>
+                </tr>
+              </thead>
+              <tbody id="bc-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">2025 Season Game Log</div>
+        <div class="g2">
+          <div><div class="game-list" id="game-list-1"></div></div>
+          <div><div class="game-list" id="game-list-2"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PAGE: SOCIAL ══════════════ -->
+    <div id="page-social" class="page">
+
+      <div style="margin-bottom:24px;">
+        <div style="font-size:20px;font-weight:800;">Social Media Performance</div>
+        <div style="font-size:13px;color:var(--txt-2);margin-top:4px;">Logo &amp; mention detection across 7 social platforms &middot; 23,530 posts &middot; Full 2025 season</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Social KPIs</div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-lbl">Social Exposure Value</div><div class="kpi-val">$351K</div><div class="kpi-sub">Logo detection + text mentions</div></div>
+          <div class="kpi gold"><div class="kpi-lbl">Total Impressions</div><div class="kpi-val gold">333.4M</div><div class="kpi-sub">Across all platforms</div></div>
+          <div class="kpi teal"><div class="kpi-lbl">Total Engagements</div><div class="kpi-val teal">13.1M</div><div class="kpi-sub">Likes, comments, shares, views</div></div>
+          <div class="kpi blue"><div class="kpi-lbl">Avg Engagement Rate</div><div class="kpi-val blue">3.93%</div><div class="kpi-sub">Engagements / impressions</div></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Platform Distribution</div>
+        <div class="plat-pills" id="plat-pills"></div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Monthly Activity</div>
+        <div class="g2">
+          <div class="card">
+            <div class="ct">Monthly Posts &amp; Engagements</div>
+            <div class="cs">August had highest post volume (3,836); April &amp; May drove peak engagement</div>
+            <div class="cw h260"><canvas id="chart-soc-posts-eng"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ct">Monthly Engagement Rate %</div>
+            <div class="cs">May 2025 peak at 6.41% &mdash; early-season audience highly activated</div>
+            <div class="cw h260"><canvas id="chart-soc-er"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Monthly Impressions Trend</div>
+        <div class="card">
+          <div class="ct">Monthly Social Impressions</div>
+          <div class="cs">November playoff push (57.1M) overtook April as the highest reach month of the season</div>
+          <div class="cw h220"><canvas id="chart-soc-imp"></canvas></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Sponsor Performance &mdash; Social</div>
+        <div class="g23">
+          <div class="card">
+            <div class="ct">Social Exposure Value by Sponsor</div>
+            <div class="cs">Ring, Alaska Airlines &amp; Ally together = 81% of social exposure value</div>
+            <div class="cw h320"><canvas id="chart-soc-sponsors"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ct">Platform Posts Mix</div>
+            <div class="cs">YouTube leads in post volume at 26.9%</div>
+            <div class="cw h320"><canvas id="chart-soc-plat"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Social Asset Breakdown</div>
+        <div class="card">
+          <div class="ct">Exposure Value by Asset Type &mdash; Social</div>
+          <div class="cs">Jersey activations (Ally, Ring, Alaska) account for 55.5% of all social exposure value</div>
+          <div class="cw h200"><canvas id="chart-soc-assets"></canvas></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Social Sponsor Detail</div>
+        <div class="card" style="padding:0;">
+          <div class="tw">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Sponsor</th><th>Exposure Value</th><th>Impressions</th><th>Engagements</th><th>Eng. Rate</th><th>Post Value</th></tr>
+              </thead>
+              <tbody id="soc-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PAGE: PARTNERS ══════════════ -->
+    <div id="page-partners" class="page">
+
+      <div style="margin-bottom:24px;">
+        <div style="font-size:20px;font-weight:800;">Sponsor Scorecards</div>
+        <div style="font-size:13px;color:var(--txt-2);margin-top:4px;">Broadcast + Social breakdown per partner &mdash; Full 2025 season &middot; All 17 sponsors</div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Total Value by Channel &mdash; All Partners</div>
+        <div class="card">
+          <div class="ct">Broadcast vs Social Exposure Value</div>
+          <div class="cs">Stacked &mdash; broadcast (rose) + social (blue). Broadcast dominates across every sponsor.</div>
+          <div class="cw h320"><canvas id="chart-partners-stacked"></canvas></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Broadcast + Social Breakdown</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:0;">
+          <div style="display:grid;grid-template-columns:1fr 110px 110px 110px;padding:12px 20px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--txt-3);">
+            <span>Partner</span>
+            <span style="text-align:right;color:var(--rose)">Broadcast</span>
+            <span style="text-align:right;color:var(--blue)">Social</span>
+            <span style="text-align:right;color:var(--teal)">Combined</span>
+          </div>
+          <div id="partners-split-list"></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Individual Partner Scorecards &mdash; All 17 Partners</div>
+        <div class="partner-grid" id="partner-cards"></div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PAGE: INSIGHTS ══════════════ -->
+    <div id="page-insights" class="page">
+
+      <div class="hero">
+        <div>
+          <div class="hero-eyebrow">Season Summary &middot; Key Findings</div>
+          <div class="hero-title">2025 Season Insights</div>
+          <div class="hero-sub">Executive highlights, efficiency rankings, and strategic observations from the full 2025 Portland Thorns sponsorship season.</div>
+        </div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-val rose">97.5%</div><div class="hs-lbl">Broadcast Share</div></div>
+          <div class="hs"><div class="hs-val gold">45.3%</div><div class="hs-lbl">ION Detections</div></div>
+          <div class="hs"><div class="hs-val teal">6.41%</div><div class="hs-lbl">Peak ER (May)</div></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Season Highlights</div>
+        <div class="insight-strip">
+          <div class="insight-card">
+            <div class="ic-lbl">Top Broadcast Sponsor</div>
+            <div class="ic-val">Toyota</div>
+            <div class="ic-sub">$4.53M exposure value &mdash; $22,065 per M impressions (highest efficiency)</div>
+          </div>
+          <div class="insight-card gold">
+            <div class="ic-lbl">Top Social Sponsor</div>
+            <div class="ic-val gold">Ring</div>
+            <div class="ic-sub">$134.5K social exposure &mdash; 38% of total social value from one sponsor</div>
+          </div>
+          <div class="insight-card teal">
+            <div class="ic-lbl">Best Month</div>
+            <div class="ic-val teal">November</div>
+            <div class="ic-sub">57.1M impressions &bull; 2.07M engagements during playoff push</div>
+          </div>
+          <div class="insight-card blue">
+            <div class="ic-lbl">Peak Engagement Rate</div>
+            <div class="ic-val blue">6.41%</div>
+            <div class="ic-sub">May 2025 &mdash; highest ER month; early-season content highly activated</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Broadcast Efficiency Ranking &mdash; Value per Million TV Impressions</div>
+        <div class="g2">
+          <div class="card">
+            <div class="ct">Value Efficiency by Sponsor (Broadcast)</div>
+            <div class="cs">Higher CPM = logo appears during higher-audience moments with greater clarity</div>
+            <div class="cw h300"><canvas id="chart-ins-eff"></canvas></div>
+          </div>
+          <div class="card" style="padding:0;">
+            <div class="tw">
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Sponsor</th><th>Value / M Impr</th><th>Value / Detection</th><th>Clarity</th></tr>
+                </thead>
+                <tbody id="ins-eff-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Monthly Social Performance Summary</div>
+        <div class="mon-grid" id="mon-grid"></div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Value vs Reach &mdash; Broadcast + Social</div>
+        <div class="card">
+          <div class="ct">Broadcast Value vs Impressions &mdash; Bubble Chart</div>
+          <div class="cs">Bubble size = logo detections. Top-right = high value + high reach.</div>
+          <div class="cw h320"><canvas id="chart-ins-bubble"></canvas></div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="slabel">Key Observations</div>
+        <div class="obs-grid" id="obs-grid"></div>
+      </div>
+
+    </div>
+
   </div>
-</main>
+</div>
 
 <script>
-(function () {
-  const D = window.THORNS_DASHBOARD_DATA;
-  function fmtNum(n) {
-    if (n == null) return "—";
-    if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
-    if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
-    if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
-    return n.toLocaleString();
+(function(){
+  const D = window.T;
+  Chart.defaults.color = '#7875A0';
+  Chart.defaults.font.family = "system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif";
+  Chart.defaults.font.size = 12;
+  const GR = '#252530', TK = '#7875A0';
+
+  function fmtN(n){ if(n==null)return'—'; if(n>=1e9)return(n/1e9).toFixed(2)+'B'; if(n>=1e6)return(n/1e6).toFixed(1)+'M'; if(n>=1e3)return(n/1e3).toFixed(0)+'K'; return n.toLocaleString(); }
+  function fmtD(n){ return n==null?'—':n.toLocaleString(); }
+  function fmtUSD(n){ if(n==null)return'—'; if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M'; if(n>=1e3)return'$'+(n/1e3).toFixed(0)+'K'; return'$'+Math.round(n).toLocaleString(); }
+  function fmtUSD2(n){ if(n==null)return'—'; return'$'+Math.round(n).toLocaleString(); }
+
+  const ROSE='#C8102E', GOLD='#F5A623', TEAL='#1CC8A0', BLUE='#4D8FF5', PURPLE='#9B6EE8';
+  const PALETTE=['#C8102E','#F5A623','#1CC8A0','#4D8FF5','#9B6EE8','#E04C55','#F0A060','#50C8A8','#B070E0','#6090D0','#90B040','#E06070','#C88040','#70D0B0','#8080D0','#D08080','#80C0E0'];
+  const NET_BADGE={ION:'b-ion',CBS:'b-cbs',ABC:'b-abc',ESPN:'b-espn',Fox:'b-fox','CBS Sports':'b-cbs','CBS Sports Network':'b-cbs','ABC/ESPN+':'b-abc',MSG:'b-other',MNT:'b-other'};
+
+  // ── NAV ───────────────────────────────────────────────
+  const navItems = document.querySelectorAll('.nav-item[data-page]');
+  const pages = document.querySelectorAll('.page');
+  let inited = {};
+
+  function showPage(id){
+    navItems.forEach(el=>el.classList.toggle('active', el.dataset.page===id));
+    pages.forEach(el=>el.classList.toggle('active', el.id==='page-'+id));
+    if(!inited[id]){ inited[id]=true; buildPage(id); }
   }
-  function fmtPct(n) {
-    return n.toFixed(2) + "%";
-  }
-  function parseISODate(s) {
-    if (!s) return null;
-    const p = s.split("-");
-    return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
-  }
-  function isoFromDate(d) {
-    const y = d.getFullYear();
-    const mo = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return y + "-" + mo + "-" + day;
-  }
+  navItems.forEach(el=>el.addEventListener('click', e=>{ e.preventDefault(); showPage(el.dataset.page); }));
 
-  document.getElementById("hdr-title").textContent = D.meta.reportTitle;
-
-  document.getElementById("kpi-eng").textContent = fmtNum(D.kpi.totalEngagements);
-  document.getElementById("kpi-imp").textContent = fmtNum(D.kpi.totalImpressions);
-  document.getElementById("kpi-vid").textContent = fmtNum(D.kpi.videoViews);
-  document.getElementById("kpi-er").textContent = fmtPct(D.kpi.avgEngagementRate);
-
-  const w = D.weekly;
-  const elStart = document.getElementById("filter-start");
-  const elEnd = document.getElementById("filter-end");
-  elStart.value = "2026-03-01";
-  elEnd.value = "2026-03-31";
-
-  Chart.defaults.color = "#8a96a8";
-  Chart.defaults.font.family =
-    "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
-  const gridColor = "#2a3140";
-  const tickColor = "#8a96a8";
-
-  const chartWeekly = new Chart(document.getElementById("chart-weekly"), {
-    type: "line",
-    data: {
-      labels: w.labels.slice(),
-      datasets: [
-        {
-          label: "Engagements",
-          data: w.engagements.slice(),
-          borderColor: "#c8102e",
-          backgroundColor: "rgba(200, 16, 46, 0.08)",
-          fill: true,
-          tension: 0.35,
-          pointRadius: 4,
-          yAxisID: "y",
-        },
-        {
-          label: "Impressions",
-          data: w.impressions.slice(),
-          borderColor: "#1fa37a",
-          backgroundColor: "rgba(31, 163, 122, 0.06)",
-          fill: true,
-          tension: 0.35,
-          pointRadius: 4,
-          yAxisID: "y1",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { labels: { color: tickColor, boxWidth: 12 } },
-        tooltip: {
-          callbacks: {
-            label: function (ctx) {
-              return " " + ctx.dataset.label + ": " + fmtNum(ctx.raw);
-            },
-          },
-        },
+  // ── OVERVIEW ─────────────────────────────────────────
+  function buildOverview(){
+    // value donut
+    new Chart(document.getElementById('chart-channel-val'),{
+      type:'doughnut',
+      data:{
+        labels:['Broadcast TV','Social Media'],
+        datasets:[{data:[D.broadcast.totalValue, D.social.totalValue],
+          backgroundColor:[ROSE,BLUE],borderColor:'#111118',borderWidth:3,hoverOffset:6}]
       },
-      scales: {
-        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
-        y: {
-          type: "linear",
-          position: "left",
-          ticks: { color: "#c8102e", callback: fmtNum },
-          grid: { color: gridColor },
-        },
-        y1: {
-          type: "linear",
-          position: "right",
-          ticks: { color: "#1fa37a", callback: fmtNum },
-          grid: { drawOnChartArea: false },
-        },
+      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{legend:{position:'bottom',labels:{color:TK,boxWidth:10,padding:12}},
+          tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)+' ('+((ctx.raw/(D.broadcast.totalValue+D.social.totalValue))*100).toFixed(1)+'%)'}}}}
+    });
+
+    // impressions donut
+    const totalImp = D.broadcast.totalImpressions + D.social.totalImpressions;
+    new Chart(document.getElementById('chart-channel-imp'),{
+      type:'doughnut',
+      data:{
+        labels:['Broadcast TV','Social Media'],
+        datasets:[{data:[D.broadcast.totalImpressions, D.social.totalImpressions],
+          backgroundColor:[ROSE,BLUE],borderColor:'#111118',borderWidth:3,hoverOffset:6}]
       },
-    },
-  });
+      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{legend:{position:'bottom',labels:{color:TK,boxWidth:10,padding:12}},
+          tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)+' ('+((ctx.raw/totalImp)*100).toFixed(1)+'%)'}}}}
+    });
 
-  const weekStarts = w.labels.map(function (_, i) {
-    return new Date(2026, 2, 1 + i * 7);
-  });
+    // top 6 stacked bar
+    const top6 = D.combined.slice(0,6);
+    new Chart(document.getElementById('chart-combined-top'),{
+      type:'bar',
+      data:{
+        labels:top6.map(p=>p.name.replace('Financial','Fin.').replace('Airlines','Air.')),
+        datasets:[
+          {label:'Broadcast',data:top6.map(p=>p.broadcast),backgroundColor:ROSE+'CC',borderRadius:4,stack:'s'},
+          {label:'Social',data:top6.map(p=>p.social),backgroundColor:BLUE+'CC',borderRadius:4,stack:'s'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:TK,boxWidth:10}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtUSD(ctx.raw)}}},
+        scales:{x:{ticks:{color:TK,maxRotation:30},grid:{color:GR}},
+          y:{ticks:{color:TK,callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'K')},grid:{color:GR},stacked:true}}
+      }
+    });
 
-  function applyFilter() {
-    let s = parseISODate(elStart.value);
-    let e = parseISODate(elEnd.value);
-    if (!s || !e) return;
-    if (s > e) {
-      const t = s;
-      s = e;
-      e = t;
-      elStart.value = isoFromDate(s);
-      elEnd.value = isoFromDate(e);
-    }
-    const idx = [];
-    for (let i = 0; i < weekStarts.length; i++) {
-      const ws = weekStarts[i];
-      const we = new Date(ws);
-      we.setDate(we.getDate() + 6);
-      if (ws <= e && we >= s) idx.push(i);
-    }
-    if (idx.length === 0) {
-      chartWeekly.data.labels = ["No data in range"];
-      chartWeekly.data.datasets[0].data = [null];
-      chartWeekly.data.datasets[1].data = [null];
-    } else {
-      chartWeekly.data.labels = idx.map(function (i) {
-        return w.labels[i];
-      });
-      chartWeekly.data.datasets[0].data = idx.map(function (i) {
-        return w.engagements[i];
-      });
-      chartWeekly.data.datasets[1].data = idx.map(function (i) {
-        return w.impressions[i];
-      });
-    }
-    chartWeekly.update();
+    // combined ranking list
+    const maxVal = D.combined[0].total;
+    const cl = document.getElementById('combined-list');
+    D.combined.forEach((p,i)=>{
+      const rnk = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank';
+      const div = document.createElement('div'); div.className='split-row';
+      div.innerHTML=`<span class="${rnk}" style="min-width:24px;font-weight:700;">${i+1}</span>
+        <span class="split-name">${p.name}</span>
+        <span class="split-bc">${fmtUSD(p.broadcast)}</span>
+        <span class="split-soc">${p.social>0?fmtUSD(p.social):'—'}</span>
+        <span class="split-total">${fmtUSD(p.total)}</span>`;
+      cl.appendChild(div);
+    });
+
+    // monthly dual axis
+    new Chart(document.getElementById('chart-ov-monthly'),{
+      type:'line',
+      data:{
+        labels:D.social.monthly.labels,
+        datasets:[
+          {label:'Engagements',data:D.social.monthly.engagements,borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y'},
+          {label:'Impressions',data:D.social.monthly.impressions,borderColor:GOLD,backgroundColor:'rgba(245,166,35,.05)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:GOLD,yAxisID:'y1'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:TK,boxWidth:12}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtN(ctx.raw)}}},
+        scales:{
+          x:{ticks:{color:TK},grid:{color:GR}},
+          y:{type:'linear',position:'left',ticks:{color:ROSE,callback:fmtN},grid:{color:GR},title:{display:true,text:'Engagements',color:ROSE,font:{size:11}}},
+          y1:{type:'linear',position:'right',ticks:{color:GOLD,callback:fmtN},grid:{drawOnChartArea:false},title:{display:true,text:'Impressions',color:GOLD,font:{size:11}}}
+        }
+      }
+    });
   }
 
-  elStart.addEventListener("change", applyFilter);
-  elEnd.addEventListener("change", applyFilter);
-  elStart.addEventListener("input", applyFilter);
-  elEnd.addEventListener("input", applyFilter);
+  // ── BROADCAST ────────────────────────────────────────
+  function buildBroadcast(){
+    // network detections bar
+    const netNames = ['ION','CBS','ABC','MNT','MSG','Fox','CBS Sports','ESPN'];
+    const netDets  = [18117, 4752, 4310, 3809, 2817, 2496, 2161, 1511];
+    const netColors= [ROSE, BLUE, GOLD, TEAL, PURPLE, TEAL+'99', BLUE+'88', PURPLE+'88'];
+    new Chart(document.getElementById('chart-bc-networks'),{
+      type:'bar',
+      data:{
+        labels:netNames,
+        datasets:[{label:'Detections',data:netDets,backgroundColor:netColors,borderRadius:6}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)+' detections'}}},
+        scales:{x:{ticks:{color:TK},grid:{color:GR}},y:{ticks:{color:TK,callback:fmtN},grid:{color:GR}}}
+      }
+    });
+
+    // network cards
+    const ng = document.getElementById('net-grid');
+    const netInfo = [
+      {name:'ION',    det:18117, note:'Primary NWSL broadcast'},
+      {name:'CBS',    det:6913,  note:'CBS + CBS Sports Net'},
+      {name:'ABC',    det:4310,  note:'National showcase'},
+      {name:'MNT',    det:3809,  note:'Regional cable'},
+      {name:'MSG',    det:2817,  note:'Regional cable'},
+      {name:'Fox',    det:2496,  note:'National broadcast'},
+      {name:'ESPN',   det:1511,  note:'Streaming + linear'},
+    ];
+    netInfo.forEach(n=>{
+      const div = document.createElement('div'); div.className='net-card';
+      div.innerHTML=`<div class="net-name">${n.name}</div>
+        <div class="net-val">${fmtN(n.det)}</div>
+        <div class="net-sub">${n.note}</div>`;
+      ng.appendChild(div);
+    });
+
+    // sponsors horizontal bar
+    new Chart(document.getElementById('chart-bc-sponsors'),{
+      type:'bar',
+      data:{
+        labels:D.broadcast.partners.map(p=>p.name.replace('Financial','Fin.').replace(' Airlines','').replace(' Federal Credit Union','')),
+        datasets:[{label:'Exposure Value',data:D.broadcast.partners.map(p=>p.value),backgroundColor:D.broadcast.partners.map((_,i)=>PALETTE[i%PALETTE.length]),borderRadius:4}]
+      },
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)}}},
+        scales:{x:{ticks:{color:TK,callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'K')},grid:{color:GR}},y:{ticks:{color:TK,font:{size:11}},grid:{color:GR}}}
+      }
+    });
+
+    // assets donut
+    new Chart(document.getElementById('chart-bc-assets'),{
+      type:'doughnut',
+      data:{
+        labels:D.broadcast.assetBreakdown.map(a=>a.name),
+        datasets:[{data:D.broadcast.assetBreakdown.map(a=>a.value),backgroundColor:[ROSE,GOLD,TEAL,BLUE,PURPLE,'#666'],borderColor:'#111118',borderWidth:3,hoverOffset:6}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+        plugins:{legend:{position:'bottom',labels:{color:TK,padding:10,boxWidth:10,font:{size:10}}},
+          tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)}}}}
+    });
+
+    // detailed table with efficiency
+    const bt = document.getElementById('bc-tbody');
+    D.broadcast.partners.forEach((p,i)=>{
+      const rnk = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank';
+      const cpDet = p.detections>0 ? Math.round(p.value/p.detections) : 0;
+      const cpM   = p.impressions>0 ? Math.round(p.value/p.impressions*1e6) : 0;
+      const clarityPct = Math.round(p.clarity*100);
+      const tr = document.createElement('tr');
+      tr.innerHTML=`<td class="${rnk}">${i+1}</td>
+        <td style="font-weight:700">${p.name}</td>
+        <td class="num" style="color:${ROSE}">${fmtUSD(p.value)}</td>
+        <td class="num dim">${fmtN(p.impressions)}</td>
+        <td class="num dim">${fmtN(p.detections)}</td>
+        <td class="num" style="color:${GOLD}">${fmtUSD2(cpDet)}</td>
+        <td class="num" style="color:${TEAL}">${fmtUSD2(cpM)}</td>
+        <td><span class="chip ${clarityPct>=50?'teal':clarityPct>=40?'gold':''}">${clarityPct}%</span></td>`;
+      bt.appendChild(tr);
+    });
+
+    // game log
+    const games = D.broadcast.games;
+    const half = Math.ceil(games.length/2);
+    const gl1 = document.getElementById('game-list-1');
+    const gl2 = document.getElementById('game-list-2');
+    games.forEach((g,i)=>{
+      const isHome = g.home_flag;
+      const opp = isHome ? g.away : g.home;
+      const netCls = NET_BADGE[g.network]||'b-other';
+      const div = document.createElement('div'); div.className='game-row';
+      div.innerHTML=`<span class="game-date">${g.date}</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.5px;color:${isHome?'var(--rose)':'var(--txt-3)'};min-width:26px;">${isHome?'HOME':'AWAY'}</span>
+        <span class="game-matchup" style="flex:1">${isHome?'<span style="color:var(--rose)">PTH</span>':'PTH'} <span class="game-vs">vs</span> ${opp}</span>
+        <span class="badge ${netCls}" style="font-size:10px;">${g.network}</span>`;
+      (i<half?gl1:gl2).appendChild(div);
+    });
+  }
+
+  // ── SOCIAL ───────────────────────────────────────────
+  function buildSocial(){
+    // platform pills
+    const totalPosts = D.social.platforms.reduce((s,p)=>s+p.posts,0);
+    const pp = document.getElementById('plat-pills');
+    D.social.platforms.forEach(p=>{
+      const pct = (p.posts/totalPosts*100).toFixed(1);
+      const div = document.createElement('div'); div.className='plat-pill';
+      div.innerHTML=`<div><span class="pp-dot" style="background:${p.color}"></span><span class="pp-name">${p.name}</span></div>
+        <div class="pp-eng">${fmtN(p.posts)}</div>
+        <div class="pp-meta">${pct}% of posts</div>`;
+      pp.appendChild(div);
+    });
+
+    // posts + engagements dual axis
+    new Chart(document.getElementById('chart-soc-posts-eng'),{
+      type:'bar',
+      data:{
+        labels:D.social.monthly.labels,
+        datasets:[
+          {label:'Posts',data:D.social.monthly.posts,backgroundColor:BLUE+'55',borderRadius:4,yAxisID:'y1',order:2},
+          {label:'Engagements',type:'line',data:D.social.monthly.engagements,borderColor:ROSE,backgroundColor:'rgba(200,16,46,.07)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:ROSE,yAxisID:'y',order:1}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:TK,boxWidth:10}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtN(ctx.raw)}}},
+        scales:{
+          x:{ticks:{color:TK},grid:{color:GR}},
+          y:{type:'linear',position:'left',ticks:{color:ROSE,callback:fmtN},grid:{color:GR},title:{display:true,text:'Engagements',color:ROSE,font:{size:11}}},
+          y1:{type:'linear',position:'right',ticks:{color:BLUE,callback:v=>fmtN(v)},grid:{drawOnChartArea:false},title:{display:true,text:'Posts',color:BLUE,font:{size:11}}}
+        }
+      }
+    });
+
+    // ER% line chart
+    const erData = D.social.monthly.engagements.map((e,i)=> parseFloat((e/D.social.monthly.impressions[i]*100).toFixed(2)));
+    new Chart(document.getElementById('chart-soc-er'),{
+      type:'line',
+      data:{
+        labels:D.social.monthly.labels,
+        datasets:[{
+          label:'Engagement Rate %',data:erData,
+          borderColor:TEAL,backgroundColor:'rgba(28,200,160,.08)',fill:true,
+          tension:.4,pointRadius:6,pointBackgroundColor:TEAL,pointBorderColor:'#111118',pointBorderWidth:2
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' ER: '+ctx.raw+'%'}}},
+        scales:{x:{ticks:{color:TK},grid:{color:GR}},
+          y:{ticks:{color:TEAL,callback:v=>v+'%'},grid:{color:GR},min:0,suggestedMax:8}}
+      }
+    });
+
+    // impressions line
+    new Chart(document.getElementById('chart-soc-imp'),{
+      type:'bar',
+      data:{
+        labels:D.social.monthly.labels,
+        datasets:[{label:'Impressions',data:D.social.monthly.impressions,backgroundColor:GOLD+'66',borderColor:GOLD,borderWidth:2,borderRadius:5}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)}}},
+        scales:{x:{ticks:{color:TK},grid:{color:GR}},y:{ticks:{color:GOLD,callback:fmtN},grid:{color:GR}}}
+      }
+    });
+
+    // social sponsors bar
+    new Chart(document.getElementById('chart-soc-sponsors'),{
+      type:'bar',
+      data:{
+        labels:D.social.partners.map(p=>p.name.replace(' Airlines','').replace(' Financial','').replace(' Federal Credit Union','')),
+        datasets:[{label:'Exposure Value',data:D.social.partners.map(p=>p.value),backgroundColor:D.social.partners.map((_,i)=>PALETTE[i%PALETTE.length]),borderRadius:4}]
+      },
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)}}},
+        scales:{x:{ticks:{color:TK,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'K':v)},grid:{color:GR}},y:{ticks:{color:TK,font:{size:11}},grid:{color:GR}}}
+      }
+    });
+
+    // platform posts donut
+    new Chart(document.getElementById('chart-soc-plat'),{
+      type:'doughnut',
+      data:{
+        labels:D.social.platforms.map(p=>p.name),
+        datasets:[{data:D.social.platforms.map(p=>p.posts),backgroundColor:D.social.platforms.map(p=>p.color),borderColor:'#111118',borderWidth:3,hoverOffset:6}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+        plugins:{legend:{position:'bottom',labels:{color:TK,padding:10,boxWidth:10,font:{size:10}}},
+          tooltip:{callbacks:{label:ctx=>' '+fmtN(ctx.raw)+' posts'}}}}
+    });
+
+    // assets bar
+    new Chart(document.getElementById('chart-soc-assets'),{
+      type:'bar',
+      data:{
+        labels:D.social.assetBreakdown.map(a=>a.name),
+        datasets:[{label:'Value',data:D.social.assetBreakdown.map(a=>a.value),backgroundColor:[ROSE,GOLD,TEAL,BLUE,PURPLE,'#666','#888'],borderRadius:5}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmtUSD(ctx.raw)+' ('+D.social.assetBreakdown[ctx.dataIndex].pct+'%)'}}},
+        scales:{x:{ticks:{color:TK,maxRotation:30},grid:{color:GR}},y:{ticks:{color:TK,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'K':v)},grid:{color:GR}}}
+      }
+    });
+
+    // social table
+    const st = document.getElementById('soc-tbody');
+    D.social.partners.forEach((p,i)=>{
+      const rnk = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank';
+      const er = p.impressions>0 ? (p.engagements/p.impressions*100).toFixed(2)+'%' : '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML=`<td class="${rnk}">${i+1}</td>
+        <td style="font-weight:700">${p.name}</td>
+        <td class="num" style="color:${ROSE}">${fmtUSD(p.value)}</td>
+        <td class="num dim">${fmtN(p.impressions)}</td>
+        <td class="num dim">${fmtN(p.engagements)}</td>
+        <td><span class="chip ${parseFloat(er)>=5?'teal':parseFloat(er)>=3?'gold':''}">${er}</span></td>
+        <td class="num dim">${fmtUSD(p.postValue)}</td>`;
+      st.appendChild(tr);
+    });
+  }
+
+  // ── PARTNERS ─────────────────────────────────────────
+  function buildPartners(){
+    // stacked bar
+    const labels = D.combined.map(p=>p.name.replace(' Financial','').replace(' Airlines','').replace(' Federal Credit Union',''));
+    new Chart(document.getElementById('chart-partners-stacked'),{
+      type:'bar',
+      data:{
+        labels,
+        datasets:[
+          {label:'Broadcast',data:D.combined.map(p=>p.broadcast),backgroundColor:ROSE+'CC',borderRadius:[4,4,0,0],stack:'s'},
+          {label:'Social',data:D.combined.map(p=>p.social),backgroundColor:BLUE+'CC',borderRadius:[4,4,0,0],stack:'s'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:TK,boxWidth:12}},tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtUSD(ctx.raw)}}},
+        scales:{x:{ticks:{color:TK,maxRotation:35},grid:{color:GR}},
+          y:{ticks:{color:TK,callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'K')},grid:{color:GR},stacked:true}}
+      }
+    });
+
+    // split list
+    const sl = document.getElementById('partners-split-list');
+    const maxT = D.combined[0].total;
+    D.combined.forEach((p,i)=>{
+      const pct = (p.total/maxT*100).toFixed(1);
+      const div = document.createElement('div');
+      div.style.cssText='display:grid;grid-template-columns:1fr 110px 110px 110px;padding:11px 20px;border-bottom:1px solid var(--border);align-items:center;';
+      div.innerHTML=`<div>
+          <div style="font-weight:700;font-size:13px;">${p.name}</div>
+          <div style="height:4px;background:var(--elevated);border-radius:2px;margin-top:5px;overflow:hidden;">
+            <div style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--rose-dim),var(--rose));width:${pct}%"></div>
+          </div>
+        </div>
+        <div style="text-align:right;color:var(--rose);font-weight:700;font-size:13px;">${fmtUSD(p.broadcast)}</div>
+        <div style="text-align:right;color:var(--blue);font-weight:700;font-size:13px;">${p.social>0?fmtUSD(p.social):'—'}</div>
+        <div style="text-align:right;color:var(--teal);font-weight:800;font-size:14px;">${fmtUSD(p.total)}</div>`;
+      sl.appendChild(div);
+    });
+
+    // ALL partner scorecards
+    const pg = document.getElementById('partner-cards');
+    const socMap = {};
+    D.social.partners.forEach(p=>socMap[p.name]=p);
+    const bcMap = {};
+    D.broadcast.partners.forEach(p=>bcMap[p.name]=p);
+
+    D.combined.forEach(p=>{
+      const bc  = bcMap[p.name]||{};
+      const soc = socMap[p.name]||{};
+      const cpM = bc.impressions>0 ? fmtUSD2(Math.round(bc.value/bc.impressions*1e6)) : null;
+      const er  = soc.impressions>0 ? (soc.engagements/soc.impressions*100).toFixed(2)+'%' : null;
+      const card = document.createElement('div'); card.className='partner-card';
+      card.innerHTML=`<div class="pc-header">
+          <div class="pc-name">${p.name}</div>
+          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+            ${p.broadcast>0?'<span class="badge b-bc">Broadcast</span>':''}
+            ${p.social>0?'<span class="badge b-social">Social</span>':''}
+          </div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-row"><span class="pc-lbl">Combined Value</span><span class="pc-val" style="color:var(--teal)">${fmtUSD(p.total)}</span></div>
+          ${bc.value?`<div class="pc-row"><span class="pc-lbl">Broadcast Value</span><span class="pc-val" style="color:var(--rose)">${fmtUSD(bc.value)}</span></div>`:''}
+          ${bc.impressions?`<div class="pc-row"><span class="pc-lbl">TV Impressions</span><span class="pc-val dim">${fmtN(bc.impressions)}</span></div>`:''}
+          ${bc.detections?`<div class="pc-row"><span class="pc-lbl">Detections</span><span class="pc-val dim">${fmtN(bc.detections)}</span></div>`:''}
+          ${cpM?`<div class="pc-row"><span class="pc-lbl">Value / M Impr</span><span class="pc-val" style="color:var(--gold)">${cpM}</span></div>`:''}
+          ${soc.value?`<div class="pc-row"><span class="pc-lbl">Social Value</span><span class="pc-val" style="color:var(--blue)">${fmtUSD(soc.value)}</span></div>`:''}
+          ${soc.impressions?`<div class="pc-row"><span class="pc-lbl">Social Impressions</span><span class="pc-val dim">${fmtN(soc.impressions)}</span></div>`:''}
+          ${er?`<div class="pc-row"><span class="pc-lbl">Engagement Rate</span><span class="pc-val" style="color:var(--teal)">${er}</span></div>`:''}
+        </div>`;
+      pg.appendChild(card);
+    });
+  }
+
+  // ── INSIGHTS ─────────────────────────────────────────
+  function buildInsights(){
+    // efficiency ranking (value per M impressions - broadcast)
+    const effData = D.broadcast.partners
+      .filter(p=>p.impressions>0 && p.name!=='Portland Thorns')
+      .map(p=>({
+        name: p.name,
+        cpm:  Math.round(p.value/p.impressions*1e6),
+        cpd:  Math.round(p.value/p.detections),
+        clarity: p.clarity,
+        value: p.value
+      }))
+      .sort((a,b)=>b.cpm-a.cpm)
+      .slice(0,10);
+
+    const maxCPM = effData[0].cpm;
+
+    new Chart(document.getElementById('chart-ins-eff'),{
+      type:'bar',
+      data:{
+        labels:effData.map(p=>p.name.replace(' Financial','').replace(' Airlines','').replace(' Federal Credit Union','')),
+        datasets:[{
+          label:'Value / M Impressions',
+          data:effData.map(p=>p.cpm),
+          backgroundColor:effData.map((_,i)=>PALETTE[i%PALETTE.length]),
+          borderRadius:6
+        }]
+      },
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' $'+ctx.raw.toLocaleString()+' per M impr'}}},
+        scales:{x:{ticks:{color:TK,callback:v=>'$'+v.toLocaleString()},grid:{color:GR}},y:{ticks:{color:TK,font:{size:11}},grid:{color:GR}}}
+      }
+    });
+
+    // efficiency table
+    const et = document.getElementById('ins-eff-tbody');
+    effData.forEach((p,i)=>{
+      const rnk = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank';
+      const clarityPct = Math.round(p.clarity*100);
+      const pct = (p.cpm/maxCPM*100).toFixed(0);
+      const tr = document.createElement('tr');
+      tr.innerHTML=`<td class="${rnk}">${i+1}</td>
+        <td style="font-weight:700;font-size:12px">${p.name}</td>
+        <td>
+          <div style="font-weight:700;color:${GOLD};font-size:13px;">$${p.cpm.toLocaleString()}</div>
+          <div style="height:4px;background:var(--border);border-radius:2px;margin-top:4px;overflow:hidden;width:80px;">
+            <div style="height:100%;border-radius:2px;background:${GOLD};width:${pct}%"></div>
+          </div>
+        </td>
+        <td class="num dim">$${p.cpd.toLocaleString()}</td>
+        <td><span class="chip ${clarityPct>=50?'teal':'gold'}">${clarityPct}%</span></td>`;
+      et.appendChild(tr);
+    });
+
+    // bubble chart: value vs impressions, size = detections
+    const bubbleData = D.broadcast.partners
+      .filter(p=>p.name!=='Portland Thorns')
+      .map(p=>({
+        x: +(p.impressions/1e6).toFixed(1),
+        y: +(p.value/1e3).toFixed(0),
+        r: Math.max(5, Math.sqrt(p.detections)*1.2),
+        label: p.name
+      }));
+
+    new Chart(document.getElementById('chart-ins-bubble'),{
+      type:'bubble',
+      data:{
+        datasets:[{
+          label:'Sponsor',
+          data:bubbleData,
+          backgroundColor:D.broadcast.partners.filter(p=>p.name!=='Portland Thorns').map((_,i)=>PALETTE[i%PALETTE.length]+'99'),
+          borderColor:D.broadcast.partners.filter(p=>p.name!=='Portland Thorns').map((_,i)=>PALETTE[i%PALETTE.length]),
+          borderWidth:1.5
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{
+            label:ctx=>{
+              const p=D.broadcast.partners.filter(x=>x.name!=='Portland Thorns')[ctx.dataIndex];
+              return [` ${p.name}`, ` Value: ${fmtUSD(p.value)}`, ` Reach: ${fmtN(p.impressions)}`, ` Detections: ${fmtN(p.detections)}`];
+            }
+          }}
+        },
+        scales:{
+          x:{title:{display:true,text:'TV Impressions (Millions)',color:TK,font:{size:11}},ticks:{color:TK,callback:v=>v+'M'},grid:{color:GR}},
+          y:{title:{display:true,text:'Exposure Value ($K)',color:TK,font:{size:11}},ticks:{color:TK,callback:v=>'$'+v+'K'},grid:{color:GR}}
+        }
+      }
+    });
+
+    // monthly summary cards
+    const mg = document.getElementById('mon-grid');
+    const labels = D.social.monthly.labels;
+    const monthNames = {Mar:'March',Apr:'April',May:'May',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November'};
+    labels.forEach((lbl,i)=>{
+      const eng  = D.social.monthly.engagements[i];
+      const imp  = D.social.monthly.impressions[i];
+      const posts= D.social.monthly.posts[i];
+      const er   = (eng/imp*100).toFixed(2);
+      const erNum = parseFloat(er);
+      const erColor = erNum>=6?'teal':erNum>=4?'gold':'rose';
+      const div = document.createElement('div'); div.className='mon-card';
+      div.innerHTML=`<div class="mon-label">${monthNames[lbl]||lbl} 2025</div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Impressions</span><span class="mon-stat-val" style="color:var(--gold)">${fmtN(imp)}</span></div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Engagements</span><span class="mon-stat-val" style="color:var(--rose)">${fmtN(eng)}</span></div>
+        <div class="mon-stat"><span class="mon-stat-lbl">Posts</span><span class="mon-stat-val dim">${fmtN(posts)}</span></div>
+        <div class="mon-er"><span style="color:var(--txt-3);font-size:10px;text-transform:uppercase;letter-spacing:1px;">Eng. Rate  </span><span style="color:var(--${erColor});font-weight:800;">${er}%</span></div>`;
+      mg.appendChild(div);
+    });
+
+    // observations
+    const observations = [
+      { icon:'📺', text:'<strong>Broadcast dominates at 97.5%</strong> of total sponsorship value ($13.9M of $14.3M combined). Social exposure, while small in dollar terms, provides meaningful amplification.' },
+      { icon:'🏆', text:'<strong>Toyota ($4.53M) and Ally Financial ($4.34M)</strong> together account for 63.4% of all broadcast exposure value, driven by jersey logo prominence and high-audience game placements.' },
+      { icon:'📡', text:'<strong>ION Network is the primary exposure driver</strong> — 18,117 detections (45.3% of all TV detections). CBS combined (CBS + CBS Sports) is second at 17.3%.' },
+      { icon:'👕', text:'<strong>Jersey sponsors dominate both channels.</strong> Ally, Ring, and Alaska Airlines jerseys account for 32.2% of broadcast value and a massive 55.5% of social exposure value.' },
+      { icon:'📈', text:'<strong>May 2025 had the highest engagement rate</strong> at 6.41%, well above the season average of 3.93%. Early-season momentum drives higher audience activation.' },
+      { icon:'🏟️', text:'<strong>November\'s playoff push produced the highest impression month</strong> (57.1M social impressions) and second-highest engagement total (2.07M), driven by extended audience attention.' },
+      { icon:'💎', text:'<strong>Ring leads social media</strong> with $134.5K in social exposure — 38.3% of all social value from a single sponsor. Alaska and Ally round out the top 3.' },
+      { icon:'⚡', text:'<strong>Toyota is the most efficient broadcaster</strong> at $22,065 of value per million TV impressions, driven by high-clarity logo placement and premium game scheduling.' },
+    ];
+
+    const og = document.getElementById('obs-grid');
+    observations.forEach(o=>{
+      const div = document.createElement('div'); div.className='obs-item';
+      div.innerHTML=`<div class="obs-icon">${o.icon}</div><div class="obs-text">${o.text}</div>`;
+      og.appendChild(div);
+    });
+  }
+
+  // ── ROUTER ───────────────────────────────────────────
+  function buildPage(id){
+    if(id==='overview')  buildOverview();
+    if(id==='broadcast') buildBroadcast();
+    if(id==='social')    buildSocial();
+    if(id==='partners')  buildPartners();
+    if(id==='insights')  buildInsights();
+  }
+
+  inited['overview'] = true;
+  buildOverview();
+
 })();
 </script>
 </body>
