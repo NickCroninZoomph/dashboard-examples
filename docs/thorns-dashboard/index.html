@@ -71,6 +71,8 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
 .nav-item:hover{background:var(--elevated);color:var(--txt);}
 .nav-item.active{background:var(--rose-faint);color:var(--rose);border-left-color:var(--rose);font-weight:700;}
 .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.nav-txt{white-space:nowrap;}
+.nav-short{display:none;}
 .sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);}
 .footer-badge{background:var(--elevated);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
 .fb-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-3);}
@@ -370,48 +372,78 @@ tbody tr:hover td{background:rgba(255,255,255,.02);}
     align-items:stretch;
     border-right:none;
     border-bottom:1px solid var(--border);
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
+    overflow:visible;
     position:sticky;
     top:0;
     z-index:40;
+    background:var(--surface);
+    box-shadow:0 4px 20px rgba(0,0,0,.35);
   }
   .sidebar-brand{
     flex:0 0 auto;
-    padding:12px 14px;
+    padding:8px 6px 8px max(10px,env(safe-area-inset-left));
     border-bottom:none;
     display:flex;
     align-items:center;
-    align-self:center;
+    align-self:stretch;
   }
+  .brand-rose{width:32px;height:32px;font-size:16px;}
   .brand-name,.brand-sub,.brand-season{display:none;}
+  .sidebar-nav-outer{
+    flex:1;
+    min-width:0;
+    position:relative;
+    display:flex;
+    align-items:stretch;
+    padding-right:max(4px,env(safe-area-inset-right));
+  }
+  .sidebar-nav-outer::after{
+    content:'';
+    position:absolute;
+    right:0;top:0;bottom:0;width:28px;
+    pointer-events:none;z-index:2;
+    background:linear-gradient(90deg,transparent,var(--surface));
+  }
   .nav-section{
     display:flex;
     flex-direction:row;
     flex-wrap:nowrap;
-    align-items:stretch;
+    align-items:center;
     flex:1;
     min-width:0;
-    padding:6px 8px 10px;
-    gap:2px;
+    padding:6px 4px 8px 0;
+    gap:4px;
     overflow-x:auto;
+    overflow-y:hidden;
     -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+    scroll-padding-inline:8px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
   }
+  .nav-section::-webkit-scrollbar{display:none;height:0;}
   .nav-lbl{display:none;}
+  .nav-long{display:none;}
+  .nav-short{display:inline;}
   .nav-item{
     flex:0 0 auto;
     white-space:nowrap;
     border-left:none;
     border-bottom:3px solid transparent;
     border-radius:8px;
-    padding:10px 12px;
+    padding:8px 10px;
+    gap:6px;
+    font-size:12px;
+    scroll-snap-align:start;
+    -webkit-tap-highlight-color:rgba(200,16,46,.15);
   }
   .nav-item.active{
     border-left-color:transparent;
     border-bottom-color:var(--rose);
+    background:var(--rose-faint);
   }
-  .nav-item span{display:inline;}
+  .nav-item .nav-txt{display:inline;}
   .sidebar-footer{display:none;}
   .content{
     width:100%;
@@ -438,6 +470,20 @@ tbody tr:hover td{background:rgba(255,255,255,.02);}
   .hero-sub{max-width:100%;}
   .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;}
   .hs{min-width:0;}
+}
+
+/* Very narrow: icon-only tabs (labels via aria-label) */
+@media(max-width:380px){
+  .nav-txt{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  .nav-item{
+    padding:10px 11px;
+    justify-content:center;
+  }
+  .nav-icon{font-size:17px;width:22px;}
+  .sidebar-nav-outer::after{width:22px;}
 }
 
 @media(max-width:700px){
@@ -605,13 +651,15 @@ window.THORNS_DASHBOARD_DATA = window.T;
       <div class="brand-season">2025 Season</div>
     </div>
 
-    <div class="nav-section">
-      <div class="nav-lbl">Dashboards</div>
-      <a class="nav-item active" data-page="overview"><span class="nav-icon">&#128202;</span><span>Overview</span></a>
-      <a class="nav-item" data-page="broadcast"><span class="nav-icon">&#128250;</span><span>Broadcast</span></a>
-      <a class="nav-item" data-page="social"><span class="nav-icon">&#128241;</span><span>Social Media</span></a>
-      <a class="nav-item" data-page="partners"><span class="nav-icon">&#129309;</span><span>Sponsors</span></a>
-      <a class="nav-item" data-page="insights"><span class="nav-icon">&#128161;</span><span>Insights</span></a>
+    <div class="sidebar-nav-outer">
+      <div class="nav-section">
+        <div class="nav-lbl">Dashboards</div>
+        <a class="nav-item active" data-page="overview" aria-current="page" aria-label="Overview"><span class="nav-icon" aria-hidden="true">&#128202;</span><span class="nav-txt">Overview</span></a>
+        <a class="nav-item" data-page="broadcast" aria-label="Broadcast"><span class="nav-icon" aria-hidden="true">&#128250;</span><span class="nav-txt">Broadcast</span></a>
+        <a class="nav-item" data-page="social" aria-label="Social media"><span class="nav-icon" aria-hidden="true">&#128241;</span><span class="nav-txt"><span class="nav-long">Social Media</span><span class="nav-short">Social</span></span></a>
+        <a class="nav-item" data-page="partners" aria-label="Sponsors"><span class="nav-icon" aria-hidden="true">&#129309;</span><span class="nav-txt">Sponsors</span></a>
+        <a class="nav-item" data-page="insights" aria-label="Insights"><span class="nav-icon" aria-hidden="true">&#128161;</span><span class="nav-txt">Insights</span></a>
+      </div>
     </div>
 
     <div class="sidebar-footer">
@@ -1112,9 +1160,18 @@ window.THORNS_DASHBOARD_DATA = window.T;
   let inited = {};
 
   function showPage(id){
-    navItems.forEach(el=>el.classList.toggle('active', el.dataset.page===id));
+    navItems.forEach(el=>{
+      const on=el.dataset.page===id;
+      el.classList.toggle('active', on);
+      if(on) el.setAttribute('aria-current','page');
+      else el.removeAttribute('aria-current');
+    });
     pages.forEach(el=>el.classList.toggle('active', el.id==='page-'+id));
     if(!inited[id]){ inited[id]=true; buildPage(id); }
+    const activeNav=document.querySelector('.nav-item.active');
+    if(activeNav&&typeof activeNav.scrollIntoView==='function'){
+      activeNav.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
   }
   navItems.forEach(el=>el.addEventListener('click', e=>{ e.preventDefault(); showPage(el.dataset.page); }));
 
@@ -1625,6 +1682,10 @@ window.THORNS_DASHBOARD_DATA = window.T;
 
   inited['overview'] = true;
   buildOverview();
+  requestAnimationFrame(function(){
+    var a=document.querySelector('.nav-item.active');
+    if(a&&a.scrollIntoView) a.scrollIntoView({inline:'center',block:'nearest'});
+  });
 
 })();
 </script>
